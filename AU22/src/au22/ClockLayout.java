@@ -8,7 +8,12 @@ public class ClockLayout extends JFrame {
 
     private JButton buttonClose;
     private JButton buttonRedraw;
-    private Container buttonGroup;
+    private JButton buttonHourPlus;
+    private JButton buttonHourMinus;
+    private JButton buttonMinutePlus;
+    private JButton buttonMinuteMinus;
+    private Container buttonGroupEast;
+    private Container buttonGroupWest;
     private ClockControl control;
     private ClockPanel panel;
 
@@ -16,25 +21,41 @@ public class ClockLayout extends JFrame {
         this.panel = panel;
         this.control = control;
 
-        this.buttonGroup = new Container();
+        this.buttonGroupEast = new Container();
+        this.buttonGroupWest = new Container();
         this.buttonClose = new JButton("Close");
         this.buttonRedraw = new JButton("Redraw");
+        this.buttonHourPlus = new JButton("Hour++");
+        this.buttonHourMinus = new JButton("Hour--");
+        this.buttonMinutePlus = new JButton("Minute++");
+        this.buttonMinuteMinus = new JButton("Minute--");
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
-        this.buttonGroup.setLayout(new FlowLayout());
+        this.buttonGroupWest.setLayout(new GridLayout(2,1));
+        this.buttonGroupEast.setLayout(new GridLayout(2,1));
 
-        this.buttonGroup.add(this.buttonRedraw);
-        this.buttonGroup.add(this.buttonClose);
+        this.buttonGroupWest.add(this.buttonHourPlus);
+        this.buttonGroupWest.add(this.buttonMinutePlus);
 
+        this.buttonGroupEast.add(this.buttonHourMinus);
+        this.buttonGroupEast.add(this.buttonMinuteMinus);
+
+        this.add(this.buttonRedraw,BorderLayout.NORTH);
         this.add(this.panel,BorderLayout.CENTER);
-        this.add(this.buttonGroup,BorderLayout.SOUTH);
+        this.add(this.buttonGroupWest,BorderLayout.WEST);
+        this.add(this.buttonGroupEast,BorderLayout.EAST);
+        this.add(this.buttonClose,BorderLayout.SOUTH);
 
-        this.setMinimumSize(new Dimension(300,300));
+        this.setMinimumSize(new Dimension(400,320));
         this.setVisible(true);
 
         this.buttonRedraw.addActionListener(this.control);
         this.buttonClose.addActionListener(this.control);
+        this.buttonHourPlus.addActionListener(this.control);
+        this.buttonMinutePlus.addActionListener(this.control);
+        this.buttonHourMinus.addActionListener(this.control);
+        this.buttonMinuteMinus.addActionListener(this.control);
     }
 
     public boolean isButtonClose(Object o){
@@ -43,6 +64,22 @@ public class ClockLayout extends JFrame {
 
     public boolean isButtonRedraw(Object o){
         return o == this.buttonRedraw;
+    }
+
+    public boolean isButtonHourPlus(Object o){
+        return o == this.buttonHourPlus;
+    }
+
+    public boolean isButtonHourMinus(Object o){
+        return o == this.buttonHourMinus;
+    }
+
+    public boolean isButtonMinutePlus(Object o){
+        return o == this.buttonMinutePlus;
+    }
+
+    public boolean isButtonMinuteMinus(Object o){
+        return o == this.buttonMinuteMinus;
     }
 
 }

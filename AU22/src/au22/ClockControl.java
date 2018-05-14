@@ -17,11 +17,23 @@ public class ClockControl implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (this.layout.isButtonRedraw(e.getSource())){
             this.panel.calculateRandomTime();
-            this.panel.repaint();
+        }
+        if (this.layout.isButtonHourPlus(e.getSource())){
+            this.panel.addHour(1);
+        }
+        if (this.layout.isButtonHourMinus(e.getSource())){
+            this.panel.addHour(-1);
+        }
+        if (this.layout.isButtonMinutePlus(e.getSource())){
+            this.panel.addMinute(1);
+        }
+        if (this.layout.isButtonMinuteMinus(e.getSource())){
+            this.panel.addMinute(-1);
         }
         if (this.layout.isButtonClose(e.getSource())){
             System.exit(0);
         }
+        this.panel.repaint();
     }
 
     public static void main(String[] args) {

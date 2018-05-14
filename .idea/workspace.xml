@@ -2,11 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dbeefacd-464e-4554-b976-2ff1d9eb5658" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AU22/AU22.iml" beforeDir="false" afterPath="$PROJECT_DIR$/AU22/AU22.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AU22/src/au22/ClockControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/AU22/src/au22/ClockControl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AU22/src/au22/ClockLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/AU22/src/au22/ClockLayout.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AU22/src/au22/ClockPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/AU22/src/au22/ClockPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AU22/au22/ClockPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AU22/au22/ClockPanel.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
+    <ignored path=".idea/vcs.xml" />
+    <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,12 +24,12 @@
       <file leaf-file-name="ClockControl.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AU22/src/au22/ClockControl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="117">
-              <caret line="18" column="39" lean-forward="true" selection-start-line="18" selection-start-column="39" selection-end-line="18" selection-end-column="39" />
+            <state relative-caret-position="384">
+              <caret line="35" column="29" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#621#622#0" expanded="true" />
-                <element signature="e#672#673#0" expanded="true" />
+                <element signature="e#851#852#0" expanded="true" />
+                <element signature="e#902#903#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -33,14 +38,22 @@
       <file leaf-file-name="ClockLayout.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AU22/src/au22/ClockLayout.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="32" column="52" lean-forward="true" selection-start-line="32" selection-start-column="52" selection-end-line="32" selection-end-column="52" />
+            <state relative-caret-position="269">
+              <caret line="49" column="48" selection-start-line="49" selection-start-column="48" selection-end-line="49" selection-end-column="48" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#995#996#0" expanded="true" />
                 <element signature="e#1026#1027#0" expanded="true" />
                 <element signature="e#1088#1089#0" expanded="true" />
                 <element signature="e#1132#1133#0" expanded="true" />
+                <element signature="e#2418#2419#0" expanded="true" />
+                <element signature="e#2463#2464#0" expanded="true" />
+                <element signature="e#2509#2510#0" expanded="true" />
+                <element signature="e#2554#2555#0" expanded="true" />
+                <element signature="e#2600#2601#0" expanded="true" />
+                <element signature="e#2645#2646#0" expanded="true" />
+                <element signature="e#2691#2692#0" expanded="true" />
+                <element signature="e#2736#2737#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -49,17 +62,16 @@
       <file leaf-file-name="ClockPanel.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/AU22/src/au22/ClockPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+            <state relative-caret-position="353">
+              <caret line="77" column="62" selection-start-line="77" selection-start-column="62" selection-end-line="77" selection-end-column="62" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#116#140#0" expanded="true" />
-                <element signature="e#1095#1096#0" expanded="true" />
-                <element signature="e#1160#1161#0" expanded="true" />
-                <element signature="e#965#966#0" expanded="true" />
-                <element signature="e#991#992#0" expanded="true" />
-                <element signature="e#1052#1053#0" expanded="true" />
-                <element signature="e#1078#1079#0" expanded="true" />
+                <element signature="method#drawVector#0;class#ClockPanel#0" />
+                <element signature="method#angularMovedPoint#0;class#ClockPanel#0" />
+                <element signature="e#1899#1900#0" expanded="true" />
+                <element signature="e#1983#1984#0" expanded="true" />
+                <element signature="method#calculateRandomTime#0;class#ClockPanel#0" />
+                <element signature="method#addMinute#0;class#ClockPanel#0" />
               </folding>
             </state>
           </provider>
@@ -169,7 +181,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="275" />
     <option name="width" value="1653" />
     <option name="height" value="1038" />
@@ -443,15 +455,15 @@
       <workItem from="1525241241981" duration="12838000" />
       <workItem from="1525458983138" duration="2719000" />
       <workItem from="1525682461464" duration="58178000" />
-      <workItem from="1525870648880" duration="34899000" />
+      <workItem from="1525870648880" duration="46448000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="120143000" />
+    <option name="totallyTimeSpent" value="131692000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="220" y="0" width="1322" height="830" extended-state="0" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
@@ -463,14 +475,14 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="3" weight="0.3295302" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32853025" />
-      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.3299712" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32478634" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.3299712" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24960381" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21140939" />
       <window_info anchor="right" id="Database" order="4" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32905984" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32853025" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -863,32 +875,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AU22/src/au22/ClockControl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="18" column="39" lean-forward="true" selection-start-line="18" selection-start-column="39" selection-end-line="18" selection-end-column="39" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#621#622#0" expanded="true" />
-            <element signature="e#672#673#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AU22/src/au22/ClockLayout.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="32" column="52" lean-forward="true" selection-start-line="32" selection-start-column="52" selection-end-line="32" selection-end-column="52" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#995#996#0" expanded="true" />
-            <element signature="e#1026#1027#0" expanded="true" />
-            <element signature="e#1088#1089#0" expanded="true" />
-            <element signature="e#1132#1133#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/src.zip!/java/lang/StrictMath.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="454">
@@ -918,19 +904,52 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AU22/src/au22/ClockPanel.java">
+    <entry file="file://$PROJECT_DIR$/AU22/src/au22/ClockControl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        <state relative-caret-position="384">
+          <caret line="35" column="29" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#116#140#0" expanded="true" />
-            <element signature="e#1095#1096#0" expanded="true" />
-            <element signature="e#1160#1161#0" expanded="true" />
-            <element signature="e#965#966#0" expanded="true" />
-            <element signature="e#991#992#0" expanded="true" />
-            <element signature="e#1052#1053#0" expanded="true" />
-            <element signature="e#1078#1079#0" expanded="true" />
+            <element signature="e#851#852#0" expanded="true" />
+            <element signature="e#902#903#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AU22/src/au22/ClockLayout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="49" column="48" selection-start-line="49" selection-start-column="48" selection-end-line="49" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#995#996#0" expanded="true" />
+            <element signature="e#1026#1027#0" expanded="true" />
+            <element signature="e#1088#1089#0" expanded="true" />
+            <element signature="e#1132#1133#0" expanded="true" />
+            <element signature="e#2418#2419#0" expanded="true" />
+            <element signature="e#2463#2464#0" expanded="true" />
+            <element signature="e#2509#2510#0" expanded="true" />
+            <element signature="e#2554#2555#0" expanded="true" />
+            <element signature="e#2600#2601#0" expanded="true" />
+            <element signature="e#2645#2646#0" expanded="true" />
+            <element signature="e#2691#2692#0" expanded="true" />
+            <element signature="e#2736#2737#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AU22/src/au22/ClockPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="353">
+          <caret line="77" column="62" selection-start-line="77" selection-start-column="62" selection-end-line="77" selection-end-column="62" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#drawVector#0;class#ClockPanel#0" />
+            <element signature="method#angularMovedPoint#0;class#ClockPanel#0" />
+            <element signature="e#1899#1900#0" expanded="true" />
+            <element signature="e#1983#1984#0" expanded="true" />
+            <element signature="method#calculateRandomTime#0;class#ClockPanel#0" />
+            <element signature="method#addMinute#0;class#ClockPanel#0" />
           </folding>
         </state>
       </provider>
