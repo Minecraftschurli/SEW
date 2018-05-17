@@ -2,33 +2,39 @@ package api;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TaskRunner {
 
-    private static final List<Task> tasksHigh = new LinkedList<>();
-    private static final List<Task> tasksNormal = new LinkedList<>();
-    private static final List<Task> tasksLow = new LinkedList<>();
+    private static final List<ITask> tasksHigh = new LinkedList<>();
+    private static final List<ITask> tasksNormal = new LinkedList<>();
+    private static final List<ITask> tasksLow = new LinkedList<>();
+    public static final Timer timer = new Timer();
 
-    private TaskRunner(){}
+    public static final TaskRunner INSTANCE = new TaskRunner();
 
-    public static void main(String[] args) {
-        while (true){
-            runAllScheduledTasks();
-        }
+    private TaskRunner() {
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runAllScheduledTasks();
+            }
+        },0,1);
     }
 
     private static void runAllScheduledTasks() {
-        for (Task task : tasksHigh){
+        for (Runnable task : tasksHigh){
             task.run();
             System.out.println(task.toString());
             tasksHigh.remove(task);
         }
-        for (Task task : tasksNormal){
+        for (Runnable task : tasksNormal){
             task.run();
             System.out.println(task.toString());
             tasksNormal.remove(task);
         }
-        for (Task task : tasksLow){
+        for (Runnable task : tasksLow){
             task.run();
             System.out.println(task.toString());
             tasksLow.remove(task);
@@ -50,11 +56,26 @@ public class TaskRunner {
         }
     }
 
-    public abstract static class Task implements Runnable{
+    public static void addScheduledTask(ITask task){
+        TaskRunner.addScheduledTask(new TaskRunner.Task(TaskRunner.Priority.NORMAL) {
+            @Override
+            public void run() {
+                task.run();
+            }
+        });
+    }
+
+    public interface ITask extends Runnable {}
+
+    public abstract static class Task implements ITask {
         public final Priority priority;
 
         public Task(Priority priority){
             this.priority = priority;
+        }
+
+        public Task(){
+            this.priority = Priority.NORMAL;
         }
 
         @Override
@@ -63,7 +84,7 @@ public class TaskRunner {
         }
     }
 
-    public enum Priority{
+    public enum Priority {
         HIGH,
         NORMAL,
         LOW;
