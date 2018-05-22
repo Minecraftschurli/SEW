@@ -1,11 +1,13 @@
 package main;
 
 import api.Misc;
+import api.encryption.AdvDecrypter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class CookieClickerView extends JFrame {
@@ -104,7 +106,12 @@ public class CookieClickerView extends JFrame {
     public void processSaveFile(File saveFile) {
         try {
             boolean upgradeSection = false;
-            String content = Misc.readFile(saveFile);
+            String content = "";
+            if (saveFile.getName().endsWith(".txt")) {
+                content = Misc.readFile(saveFile);
+            } else if (saveFile.getName().endsWith(".cookie")) {
+                content = new AdvDecrypter(new Random(1L).nextInt()).decrypt(Misc.readFile(saveFile));
+            }
             content = content.replace("\t","");
             String[] lines = content.split("\n");
             for (String line : lines) {

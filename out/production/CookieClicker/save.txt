@@ -1,8 +1,9 @@
 {
-Level: 6
-Cookies: 2538
+Level: 18
+Cookies: 546468
 Upgrades: {
-	Multiplier: 40
-	Autoclick: 0
+	Multiplier: 200
+	Autoclick: 60
+	Kalianification: 100
 	}
 }

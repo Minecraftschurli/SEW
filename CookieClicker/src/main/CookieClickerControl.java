@@ -1,9 +1,13 @@
 package main;
 
+import api.encryption.EncryptedWriter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,8 +57,6 @@ public class CookieClickerControl implements ActionListener, WindowListener, Key
         }
     }
 
-
-
     public static void main(String[] args) {
         CookieClickerControl c = new CookieClickerControl();
     }
@@ -81,9 +83,23 @@ public class CookieClickerControl implements ActionListener, WindowListener, Key
 
     private void save() {
         try {
-            FileWriter fileWriter = new FileWriter(this.saveFile);
-            fileWriter.write("{\n"+this.view.toString()+"\n}");
-            fileWriter.close();
+            if (this.saveFile == null){
+                for (int saveNumber = 0;;saveNumber++) {
+                    if (!Files.exists(Paths.get("./CookieClicker/resources/save" + saveNumber + ".cookie"))) {
+                        this.saveFile = new File("./CookieClicker/resources/save"+saveNumber+".cookie");
+                        break;
+                    }
+                }
+            }
+            if (this.saveFile.getName().endsWith(".txt")){
+                FileWriter fileWriter = new FileWriter(this.saveFile);
+                fileWriter.write("{\n" + this.view.toString() + "\n}");
+                fileWriter.close();
+            } else if (this.saveFile.getName().endsWith(".cookie")) {
+                EncryptedWriter fileWriter = new EncryptedWriter(this.saveFile);
+                fileWriter.write("{\n" + this.view.toString() + "\n}");
+                fileWriter.close();
+            }
         } catch (Exception ignored) {}
     }
 
