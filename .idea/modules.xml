@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AU16/AU16.iml" filepath="$PROJECT_DIR$/AU16/AU16.iml" />
       <module fileurl="file://$PROJECT_DIR$/AU22/AU22.iml" filepath="$PROJECT_DIR$/AU22/AU22.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CookieClicker/CookieClicker.iml" filepath="$PROJECT_DIR$/CookieClicker/CookieClicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/SEW.iml" filepath="$PROJECT_DIR$/SEW.iml" />
       <module fileurl="file://$PROJECT_DIR$/Util/Util.iml" filepath="$PROJECT_DIR$/Util/Util.iml" />
     </modules>

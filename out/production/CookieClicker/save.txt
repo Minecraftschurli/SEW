@@ -1,0 +1,8 @@
+{
+Level: 6
+Cookies: 2538
+Upgrades: {
+	Multiplier: 40
+	Autoclick: 0
+	}
+}

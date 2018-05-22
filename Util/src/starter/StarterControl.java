@@ -2,6 +2,7 @@ package starter;
 
 import api.TaskRunner;
 import au22.ClockControl;
+import main.CookieClickerControl;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,6 +33,10 @@ public class StarterControl implements ActionListener {
                     break;
                 case "ClockRandomDark":
                     TaskRunner.addScheduledTask(() -> ClockControl.main(new String[]{"random","dark"}));
+                    this.view.setVisible(false);
+                    break;
+                case "CookieClicker":
+                    TaskRunner.addScheduledTask(() -> CookieClickerControl.main(new String[]{}));
                     this.view.setVisible(false);
                     break;
                 default:

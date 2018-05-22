@@ -5,7 +5,7 @@ import java.awt.*;
 public class GUIHelper {
 
     public static Color getContrastColor(Color color) {
-        double y = (299 * color.getRed() + 587 * color.getGreen() + 114 * color.getBlue()) / 1000;
+        double y = ((299 * color.getRed()) + (587 * color.getGreen()) + (114 * color.getBlue())) / 1000.0;
         return y >= 128 ? Color.black : Color.white;
     }
 
@@ -18,6 +18,13 @@ public class GUIHelper {
 
     public static void drawCircle(Graphics g,Point center,int radius){
         g.drawOval(center.x-radius,center.y-radius,radius*2,radius*2);
+    }
+
+    public static void drawCircle(Graphics g,Point center,int radius,Color color){
+        Color old = g.getColor();
+        g.setColor(color);
+        g.drawOval(center.x-radius,center.y-radius,radius*2,radius*2);
+        g.setColor(old);
     }
 
     public static void fillCircle(Graphics g,Point center,int radius){

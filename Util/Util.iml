@@ -11,5 +11,6 @@
     <orderEntry type="library" name="guava-25.0-jre" level="project" />
     <orderEntry type="library" name="javassist-3.12.1.GA-sources" level="project" />
     <orderEntry type="module" module-name="AU22" />
+    <orderEntry type="module" module-name="CookieClicker" />
   </component>
 </module>

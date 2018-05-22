@@ -11,7 +11,7 @@ public class StarterView extends JFrame {
     private JPanel panel;
     private Container buttonGroup;
     private StarterControl control;
-    public final String[] label = {"ClockStandard","ClockDark","ClockRandom","ClockRandomDark"};
+    public final String[] label = {"CookieClicker","ClockStandard","ClockDark","ClockRandom","ClockRandomDark"};
 
     public StarterView(StarterControl control){
         this.control = control;

@@ -1,7 +1,5 @@
 package au22;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -51,9 +49,9 @@ public class ClockModel extends JPanel {
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
                 clip.start();
-            } catch(Exception ex) {
+            } catch(Exception e) {
                 System.out.println("Error with playing sound.");
-                ex.printStackTrace();
+                e.printStackTrace();
             }
         }
     }
@@ -61,7 +59,7 @@ public class ClockModel extends JPanel {
     private void drawClock(Graphics g, int xOffset, int yOffset) {
         this.radius = (getWidth()-(xOffset*2) > getHeight()-(yOffset*2) ? getHeight()-(yOffset*2) : getWidth()-(xOffset*2))/2;
         this.center = new Point(getWidth()/2,yOffset+radius);
-        fillCircle(g,this.center,this.radius+1,new Color(0));
+        fillCircle(g,this.center,this.radius+1,this.paintColor);
         fillCircle(g,this.center,this.radius-1,this.getBackground());
         for (int i = 0; i < 12 * 5; i++) {
             if (i%5!=0)drawLine(g,angularMovedPoint(this.center,this.radius/16*15,i*6),angularMovedPoint(this.center,this.radius,i*6));
