@@ -8,99 +8,105 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
-public class CookieClickerView extends JFrame {
+public class CookieClickerView extends JPanel {
 
     private int level;
     private final int cookiesPerLevel = 10;
     private CookieClickerControl control;
     private CookieClickerButton button;
     private CookieClickerCookieBar bar;
-    private final UpgradeList upgrades = new UpgradeList();
-    private final ArrayList<UpgradeButton> upgradeButtons = new ArrayList<>();
+    private static final UpgradeList upgrades = new UpgradeList();
     private Container upgradeContainer;
 
-    public CookieClickerView(CookieClickerButton button, CookieClickerCookieBar bar, CookieClickerControl control){
+    public CookieClickerView(CookieClickerButton button, CookieClickerCookieBar bar, CookieClickerControl control) {
         this.control = control;
         this.button = button;
         this.bar = bar;
-        
-        this.upgrades.put("Multiplier",0);
-        this.upgrades.put("Autoclick",0);
 
-        for (int i = 0; i < upgrades.size(); i++) {
-            upgradeButtons.add(new UpgradeButton(upgrades.getKey(i)+"\nLevel: "+upgrades.getValue(i)));
-        }
+        this.setLayout(new BorderLayout());
+        
+        upgrades.put(new CookieClickerUpgrade("Multiplier") {
+            @Override
+            public void performLevelUp() {
+                int cost = 10*(int)Math.pow(2,this.upgradeLevel);
+                if (getCookies()>=cost&&isAvailable()) {
+                    removeCookies(cost);
+                    levelUp(1);
+                }
+            }
+
+            @Override
+            public boolean isAvailable() {
+                return (level >= 3 && level < 5 && this.upgradeLevel == 1) || (level >= 5 && level < 10 && this.upgradeLevel == 2) || (level >= 10);
+            }
+        });
+        upgrades.put(new CookieClickerUpgrade("Autoclick") {
+
+            @Override
+            public void performLevelUp() {
+                int cost = 100*(int)Math.pow(2,this.upgradeLevel);
+                if (getCookies()>=cost&&isAvailable()) {
+                    removeCookies(cost);
+                    levelUp(1);
+                    control.addAutoClicker(this.upgradeLevel);
+                }
+            }
+
+            @Override
+            public boolean isAvailable() {
+                return level>=10;
+            }
+        });
 
         this.upgradeContainer = new Container();
-        this.upgradeContainer.setLayout(new GridLayout(4,upgradeButtons.size()/4));
+        this.upgradeContainer.setLayout(new GridLayout(4,upgrades.size()/4));
 
-        for (JButton b : upgradeButtons) {
+        upgrades.forEachUpgrade(upgrade -> {
+            UpgradeButton b = upgrade.button;
             this.upgradeContainer.add(b);
             b.addActionListener(this.control);
-            b.setVisible(false);
-        }
+            b.setVisible(true);
+        });
 
         this.button.addActionListener(this.control);
-
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         this.add(this.upgradeContainer, BorderLayout.EAST);
         this.add(this.button, BorderLayout.CENTER);
         this.add(this.bar, BorderLayout.NORTH);
-        this.pack();
+        this.setMinimumSize(new Dimension(400,300));
         this.setVisible(true);
-
-        this.addWindowListener(this.control);
     }
 
-    public void levelUp(){
+    private int getCookies() {
+        return this.bar.getValue();
+    }
+
+    public void levelUp() {
         this.level++;
         long exp = Math.round(Math.exp(this.level))*cookiesPerLevel;
         exp = exp == -10 ? Integer.MAX_VALUE : exp;
         int max = (int)Math.min(exp,Integer.MAX_VALUE-1);
         this.bar.setMaximum(max);
-        System.out.println("LevelUp"+max);
-        if (this.level==3){
-            this.upgradeButtons.get(0).setVisible(true);
-        }
-        if (this.level==5){
-            this.upgradeButtons.get(0).setVisible(true);
-        }
-        if (this.level==10){
-            this.upgradeButtons.get(0).setVisible(true);
-            this.upgradeButtons.get(1).setVisible(true);
-        }
+        System.out.println("Level: "+level+" Next: "+max);
     }
     
-    public void upgradeButtonClicked(JButton upgradeButton){
-        if (this.upgradeButtons.contains(upgradeButton)){
-            int index = this.upgradeButtons.indexOf(upgradeButton);
-            this.upgrades.put(index,this.upgrades.getValue(index)+1);
-            upgradeButton.setText(upgrades.getKey(index)+"\nLevel: "+upgrades.getValue(index));
-            if (index==0&&((this.level>=3&&this.level<5&&upgrades.getValue(index)>=1)||(this.level>=5&&this.level<10&&upgrades.getValue(index)>=2))){
-                upgradeButton.setVisible(false);
-                this.addCookies(-(10*(int)Math.pow(2,upgrades.getValue(0))));
+    public void upgradeButtonClicked(UpgradeButton upgradeButton) {
+        upgrades.forEachUpgrade(upgrade -> {
+            if (upgrade.button == upgradeButton){
+                upgrade.performLevelUp();
             }
-            if (index==1){
-                this.control.addAutoClicker(upgrades.getValue(index));
-                this.addCookies(-(100*(int)Math.pow(2,upgrades.getValue(1))));
-            }
-        }
-    }
-
-    @Override
-    public String toString() {
-        String out =
-                "Level: "+this.level+"\n"+
-                "Cookies: "+this.bar.getValue()+"\n"+
-                "Upgrades: {\n"+this.upgrades.toString()+"\t}";
-        return out;
+        });
     }
 
     public void addCookies(int cookies) {
-        this.bar.addValue(cookies*(this.upgrades.get("Multiplier")+1));
+        this.bar.addValue(cookies*(this.upgrades.getLevelForName("Multiplier")+1));
+    }
+
+    public void removeCookies(int cookies) {
+        this.bar.addValue(-cookies);
     }
 
     public void processSaveFile(File saveFile) {
@@ -110,7 +116,7 @@ public class CookieClickerView extends JFrame {
             if (saveFile.getName().endsWith(".txt")) {
                 content = Misc.readFile(saveFile);
             } else if (saveFile.getName().endsWith(".cookie")) {
-                content = new AdvDecrypter(new Random(1L).nextInt()).decrypt(Misc.readFile(saveFile));
+                content = new AdvDecrypter(new Random(201L).nextInt()).decrypt(Misc.readFile(saveFile));
             }
             content = content.replace("\t","");
             String[] lines = content.split("\n");
@@ -127,7 +133,9 @@ public class CookieClickerView extends JFrame {
                     if (line.contains("}")){
                         upgradeSection = false;
                     } else {
-                        this.upgrades.put(line.substring(0, line.indexOf(':')), Integer.parseInt(line.substring(line.indexOf(':') + 2)));
+                        if (this.upgrades.containsKey(line.substring(0, line.indexOf(':')))) {
+                            this.upgrades.set(line.substring(0, line.indexOf(':')), Integer.parseInt(line.substring(line.indexOf(':') + 2)));
+                        }
                     }
                 }
                 if (line.contains("Upgrades")){
@@ -136,5 +144,14 @@ public class CookieClickerView extends JFrame {
             }
         } catch (Exception e) {e.printStackTrace();}
         this.button.test();
+    }
+
+    @Override
+    public String toString() {
+        String out =
+                "Level: "+this.level+"\n"+
+                        "Cookies: "+this.bar.getValue()+"\n"+
+                        "Upgrades: {\n"+this.upgrades.toString()+"\t}";
+        return out;
     }
 }

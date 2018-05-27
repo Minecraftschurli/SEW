@@ -1,10 +1,10 @@
 package api.annotations;
 
-import api.encryption.DeAndEncrypt;
+import api.encryption.DeAndEncrypt;/*
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.ConfigurationBuilder;*/
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,8 +19,8 @@ public class Test{
 
     public static void main(String[] args) {
         /*for (Map.Entry entry : System.getenv().entrySet()) {
-            System.out.println(entry.getKey());
-            System.out.println(entry.getValue());
+            System.out.println(entry.getNameForIndex());
+            System.out.println(entry.getLevelForIndex());
             System.out.println();
         }
         System.out.println();*/
@@ -77,7 +77,7 @@ public class Test{
         return out.get();
     }
 
-    private static void runAllAnnotatedWith(Class<? extends Annotation> annotation,String name) throws Exception {
+    /*private static void runAllAnnotatedWith(Class<? extends Annotation> annotation,String name) throws Exception {
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forJavaClassPath())
                 .setScanners(new MethodAnnotationsScanner()));
@@ -88,6 +88,6 @@ public class Test{
                 m.invoke(null);
             }
         }
-    }
+    }*/
 }
 

@@ -1,17 +1,35 @@
 package au22;
 
 
+import starter.App;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ClockControl extends AbstractAction implements ActionListener, KeyEventDispatcher {
+public class ClockControl extends App implements ActionListener, KeyEventDispatcher {
 
     private ClockModel model;
     private ClockView view;
     private final Timer t = new Timer();
+
+    public ClockControl() {
+        this.model = new ClockModel();
+        this.view = new ClockView(this.model,this);
+        this.view.realClock();
+        this.model.setInitialTime(System.currentTimeMillis()/1000,2);
+        t.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                model.addSeconds(1);
+                view.refresh();
+            }
+        },1000,1000);
+        this.view.setDarkMode(false);
+        //this.view.setCustomColor(new Color(0xC6DE03));
+    }
 
     public ClockControl(boolean b,boolean dark) {
         this.model = new ClockModel();
@@ -96,5 +114,20 @@ public class ClockControl extends AbstractAction implements ActionListener, KeyE
             }
         }
         return false;
+    }
+
+    @Override
+    public JPanel getView() {
+        return this.view;
+    }
+
+    @Override
+    public void onOpened() {
+        keyboardFocusManager.addKeyEventDispatcher(this);
+    }
+
+    @Override
+    public void onClosed() {
+        keyboardFocusManager.removeKeyEventDispatcher(this);
     }
 }

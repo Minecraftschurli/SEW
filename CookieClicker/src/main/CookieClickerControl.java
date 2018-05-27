@@ -1,6 +1,7 @@
 package main;
 
 import api.encryption.EncryptedWriter;
+import starter.App;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +12,7 @@ import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class CookieClickerControl implements ActionListener, WindowListener, KeyEventDispatcher {
+public class CookieClickerControl extends App implements ActionListener, WindowListener, KeyEventDispatcher {
 
     private CookieClickerView view;
     private CookieClickerButton button;
@@ -96,7 +97,7 @@ public class CookieClickerControl implements ActionListener, WindowListener, Key
                 fileWriter.write("{\n" + this.view.toString() + "\n}");
                 fileWriter.close();
             } else if (this.saveFile.getName().endsWith(".cookie")) {
-                EncryptedWriter fileWriter = new EncryptedWriter(this.saveFile);
+                EncryptedWriter fileWriter = new EncryptedWriter(this.saveFile, 201L);
                 fileWriter.write("{\n" + this.view.toString() + "\n}");
                 fileWriter.close();
             }
@@ -146,5 +147,26 @@ public class CookieClickerControl implements ActionListener, WindowListener, Key
             this.bar.setValue(this.bar.getMaximum());
         }
         return false;
+    }
+
+    @Override
+    public JPanel getView() {
+        return this.view;
+    }
+
+    @Override
+    public void onOpened(){
+        loadSave();
+        this.view.setVisible(true);
+        this.master.pack();
+        this.master.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.master.addWindowListener(this);
+    }
+
+    @Override
+    public void onClosed() {
+        this.view.setVisible(false);
+        save();
+        this.master.removeWindowListener(this);
     }
 }

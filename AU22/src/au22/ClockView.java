@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 @SuppressWarnings({"WeakerAccess", "FieldCanBeLocal"})
-public class ClockView extends JFrame {
+public class ClockView extends JPanel {
 
     JFrame edit;
     private JButton buttonEditOK;
@@ -43,7 +43,6 @@ public class ClockView extends JFrame {
         this.buttonMMinus = new JButton("Minute--");
         this.buttonEditOK = new JButton("OK");
 
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         this.buttonGroupWest.setLayout(new GridLayout(2,1));
         this.buttonGroupEast.setLayout(new GridLayout(2,1));
