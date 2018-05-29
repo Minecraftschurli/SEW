@@ -33,11 +33,8 @@ public class CookieClickerView extends JPanel {
         upgrades.put(new CookieClickerUpgrade("Multiplier") {
             @Override
             public void performLevelUp() {
-                int cost = 10*(int)Math.pow(2,this.upgradeLevel);
-                if (getCookies()>=cost&&isAvailable()) {
-                    removeCookies(cost);
-                    levelUp(1);
-                }
+                removeCookies(getCost());
+                levelUp(1);
             }
 
             @Override
@@ -48,17 +45,19 @@ public class CookieClickerView extends JPanel {
             @Override
             public void performLoad() {
             }
+
+            @Override
+            public int getCost() {
+                return 10 * (int) Math.pow(2, this.upgradeLevel);
+            }
         });
         upgrades.put(new CookieClickerUpgrade("Autoclick") {
 
             @Override
             public void performLevelUp() {
-                int cost = 100*(int)Math.pow(2,this.upgradeLevel);
-                if (getCookies()>=cost&&isAvailable()) {
-                    removeCookies(cost);
-                    levelUp(1);
-                    control.addAutoClicker(this.upgradeLevel);
-                }
+                removeCookies(getCost());
+                levelUp(1);
+                control.addAutoClicker(this.upgradeLevel);
             }
 
             @Override
@@ -69,6 +68,11 @@ public class CookieClickerView extends JPanel {
             @Override
             public void performLoad() {
                 control.addAutoClicker(this.upgradeLevel);
+            }
+
+            @Override
+            public int getCost() {
+                return 100 * (int) Math.pow(2, this.upgradeLevel);
             }
         });
 
@@ -110,13 +114,16 @@ public class CookieClickerView extends JPanel {
     public void upgradeButtonClicked(UpgradeButton upgradeButton) {
         upgrades.forEachUpgrade(upgrade -> {
             if (upgrade.button == upgradeButton){
-                upgrade.performLevelUp();
+                if (upgrade.isAvailable() && upgrade.getCost() < getCookies()) {
+                    upgrade.performLevelUp();
+                }
             }
         });
     }
 
     public void addCookies(int cookies) {
         this.bar.addValue(cookies * (upgrades.getLevelForName("Multiplier") + 1));
+        upgrades.forEachUpgrade(upgrade -> upgrade.button.setEnabled(upgrade.isAvailable()));
     }
 
     public void removeCookies(int cookies) {

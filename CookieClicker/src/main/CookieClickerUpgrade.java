@@ -8,14 +8,14 @@ public abstract class CookieClickerUpgrade {
 
     public CookieClickerUpgrade(String name){
         this.upgradeLevel = 0;
-        this.button = new UpgradeButton(name+" \nLevel: "+upgradeLevel);
+        this.button = new UpgradeButton("<html>" + name + " <br>Level: " + upgradeLevel + "</html>");
         this.button.setName(name);
         this.name = name;
     }
 
     protected void levelUp(int level){
         this.upgradeLevel += level;
-        this.button.setText(this.name+" \nLevel: "+this.upgradeLevel);
+        this.button.setText("<html>" + name + " <br>Level: " + upgradeLevel + "</html>");
     }
 
     public abstract void performLevelUp();
@@ -23,6 +23,8 @@ public abstract class CookieClickerUpgrade {
     public abstract boolean isAvailable();
 
     public abstract void performLoad();
+
+    public abstract int getCost();
 
     public int getUpgradeLevel() {
         return upgradeLevel;
