@@ -22,6 +22,8 @@ public abstract class CookieClickerUpgrade {
 
     public abstract boolean isAvailable();
 
+    public abstract void performLoad();
+
     public int getUpgradeLevel() {
         return upgradeLevel;
     }

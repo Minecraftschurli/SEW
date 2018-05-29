@@ -1,6 +1,7 @@
 package main;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -71,6 +72,7 @@ public class UpgradeList {
         forEachUpgrade(upgrade -> {
             if (upgrade.getName().equals(name)){
                 upgrade.setUpgradeLevel(level);
+                upgrade.performLoad();
             }
         });
     }

@@ -6,9 +6,7 @@ import api.encryption.AdvDecrypter;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class CookieClickerView extends JPanel {
@@ -20,11 +18,15 @@ public class CookieClickerView extends JPanel {
     private CookieClickerCookieBar bar;
     private static final UpgradeList upgrades = new UpgradeList();
     private Container upgradeContainer;
+    private JMenuItem debugMenu;
 
     public CookieClickerView(CookieClickerButton button, CookieClickerCookieBar bar, CookieClickerControl control) {
         this.control = control;
         this.button = button;
         this.bar = bar;
+
+        this.debugMenu = new JMenuItem("Debug");
+        this.debugMenu.addActionListener(this.control);
 
         this.setLayout(new BorderLayout());
         
@@ -40,7 +42,11 @@ public class CookieClickerView extends JPanel {
 
             @Override
             public boolean isAvailable() {
-                return (level >= 3 && level < 5 && this.upgradeLevel == 1) || (level >= 5 && level < 10 && this.upgradeLevel == 2) || (level >= 10);
+                return (level >= 3 && level < 5 && this.upgradeLevel < 1) || (level >= 5 && level < 10 && this.upgradeLevel < 2) || (level >= 10);
+            }
+
+            @Override
+            public void performLoad() {
             }
         });
         upgrades.put(new CookieClickerUpgrade("Autoclick") {
@@ -58,6 +64,11 @@ public class CookieClickerView extends JPanel {
             @Override
             public boolean isAvailable() {
                 return level>=10;
+            }
+
+            @Override
+            public void performLoad() {
+                control.addAutoClicker(this.upgradeLevel);
             }
         });
 
@@ -85,12 +96,15 @@ public class CookieClickerView extends JPanel {
     }
 
     public void levelUp() {
+        long exp = Math.round(Math.exp(this.level / 2.5)) * cookiesPerLevel;
+        exp = exp == -10 ? Integer.MAX_VALUE : exp;
+        long last = exp;
         this.level++;
-        long exp = Math.round(Math.exp(this.level))*cookiesPerLevel;
+        exp = Math.round(Math.exp(this.level / 2.5)) * cookiesPerLevel;
         exp = exp == -10 ? Integer.MAX_VALUE : exp;
         int max = (int)Math.min(exp,Integer.MAX_VALUE-1);
         this.bar.setMaximum(max);
-        System.out.println("Level: "+level+" Next: "+max);
+        System.out.println("Level: " + level + " Next: " + (max - last));
     }
     
     public void upgradeButtonClicked(UpgradeButton upgradeButton) {
@@ -102,7 +116,7 @@ public class CookieClickerView extends JPanel {
     }
 
     public void addCookies(int cookies) {
-        this.bar.addValue(cookies*(this.upgrades.getLevelForName("Multiplier")+1));
+        this.bar.addValue(cookies * (upgrades.getLevelForName("Multiplier") + 1));
     }
 
     public void removeCookies(int cookies) {
@@ -112,6 +126,7 @@ public class CookieClickerView extends JPanel {
     public void processSaveFile(File saveFile) {
         try {
             boolean upgradeSection = false;
+            boolean saveSection = false;
             String content = "";
             if (saveFile.getName().endsWith(".txt")) {
                 content = Misc.readFile(saveFile);
@@ -121,25 +136,34 @@ public class CookieClickerView extends JPanel {
             content = content.replace("\t","");
             String[] lines = content.split("\n");
             for (String line : lines) {
-                if (line.contains("Level")){
-                    this.level = Integer.parseInt(line.substring(line.indexOf(':')+2))-1;
-                    this.levelUp();
-                }
-                if (line.contains("Cookies")){
-                    this.bar.setValue(Integer.parseInt(line.substring(line.indexOf(':')+2)));
-                    System.out.println("test");
-                }
-                if (upgradeSection){
-                    if (line.contains("}")){
-                        upgradeSection = false;
+                if (saveSection) {
+                    if (line.contains("]")) {
+                        saveSection = false;
                     } else {
-                        if (this.upgrades.containsKey(line.substring(0, line.indexOf(':')))) {
-                            this.upgrades.set(line.substring(0, line.indexOf(':')), Integer.parseInt(line.substring(line.indexOf(':') + 2)));
+                        if (line.contains("Level")) {
+                            this.level = Integer.parseInt(line.substring(line.indexOf(':') + 2)) - 1;
+                            this.levelUp();
+                        }
+                        if (line.contains("Cookies")) {
+                            this.bar.setValue(Integer.parseInt(line.substring(line.indexOf(':') + 2)));
+                            System.out.println("test");
+                        }
+                        if (upgradeSection) {
+                            if (line.contains("}")) {
+                                upgradeSection = false;
+                            } else {
+                                if (upgrades.containsKey(line.substring(0, line.indexOf(':')))) {
+                                    upgrades.set(line.substring(0, line.indexOf(':')), Integer.parseInt(line.substring(line.indexOf(':') + 2)));
+                                }
+                            }
+                        }
+                        if (line.contains("Upgrades")) {
+                            upgradeSection = true;
                         }
                     }
                 }
-                if (line.contains("Upgrades")){
-                    upgradeSection = true;
+                if (line.equals("[")) {
+                    saveSection = true;
                 }
             }
         } catch (Exception e) {e.printStackTrace();}
@@ -151,7 +175,11 @@ public class CookieClickerView extends JPanel {
         String out =
                 "Level: "+this.level+"\n"+
                         "Cookies: "+this.bar.getValue()+"\n"+
-                        "Upgrades: {\n"+this.upgrades.toString()+"\t}";
+                        "Upgrades: {\n" + upgrades.toString() + "\t}";
         return out;
+    }
+
+    public JMenuItem getMenu() {
+        return this.debugMenu;
     }
 }

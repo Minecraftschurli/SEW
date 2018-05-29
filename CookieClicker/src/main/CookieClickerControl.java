@@ -6,7 +6,8 @@ import starter.App;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Timer;
@@ -27,11 +28,15 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
         }
     };
     private JFrame loadSave;
+    private DebugWindow debugWindow;
+    private boolean debug;
 
     public CookieClickerControl(){
         this.button = new CookieClickerButton("Click");
         this.bar = new CookieClickerCookieBar(SwingConstants.HORIZONTAL);
         this.view = new CookieClickerView(this.button,this.bar,this);
+
+        this.debugWindow = new DebugWindow("Debug", this);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(this);
     }
@@ -56,6 +61,13 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
                 loadSave.setVisible(false);
             }
         }
+        if (e.getSource() == this.view.getMenu()) {
+            openDebugWindow();
+        }
+    }
+
+    private void openDebugWindow() {
+        debugWindow.setVisible(true);
     }
 
     public static void main(String[] args) {
@@ -80,6 +92,7 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
     @Override
     public void windowClosing(WindowEvent e) {
         this.save();
+        e.getWindow().dispose();
     }
 
     private void save() {
@@ -94,11 +107,11 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
             }
             if (this.saveFile.getName().endsWith(".txt")){
                 FileWriter fileWriter = new FileWriter(this.saveFile);
-                fileWriter.write("{\n" + this.view.toString() + "\n}");
+                fileWriter.write("[\n" + this.view.toString() + "\n]");
                 fileWriter.close();
             } else if (this.saveFile.getName().endsWith(".cookie")) {
                 EncryptedWriter fileWriter = new EncryptedWriter(this.saveFile, 201L);
-                fileWriter.write("{\n" + this.view.toString() + "\n}");
+                fileWriter.write("[\n" + this.view.toString() + "\n]");
                 fileWriter.close();
             }
         } catch (Exception ignored) {}
@@ -143,8 +156,8 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
-        if(KeyStroke.getKeyStrokeForEvent(e)==KeyStroke.getKeyStroke('a')){
-            this.bar.setValue(this.bar.getMaximum());
+        if (KeyStroke.getKeyStrokeForEvent(e) == KeyStroke.getKeyStroke('a') && debug) {
+            this.bar.setValue(this.bar.getMaximum() - 1);
         }
         return false;
     }
@@ -161,6 +174,7 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
         this.master.pack();
         this.master.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.master.addWindowListener(this);
+        this.master.getJMenuBar().add(this.view.getMenu());
     }
 
     @Override
@@ -168,5 +182,14 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
         this.view.setVisible(false);
         save();
         this.master.removeWindowListener(this);
+        this.master.getJMenuBar().remove(this.view.getMenu());
+    }
+
+    public boolean isLoggedIn() {
+        return this.debug;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.debug = loggedIn;
     }
 }
