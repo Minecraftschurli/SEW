@@ -38,16 +38,34 @@ public class GUIHelper {
         g.setColor(old);
     }
 
+    public static void drawOval(Graphics g, Point pos, Dimension size) {
+        g.drawOval(pos.x, pos.y, size.width, size.height);
+    }
+
+    public static void drawOval(Graphics g, Point pos, Dimension size, Color color) {
+        Color old = g.getColor();
+        g.setColor(color);
+        g.drawOval(pos.x, pos.y, size.width, size.height);
+        g.setColor(old);
+    }
+
+    public static void fillOval(Graphics g, Point pos, Dimension size) {
+        g.fillOval(pos.x, pos.y, size.width, size.height);
+    }
+
+    public static void fillOval(Graphics g, Point pos, Dimension size, Color color) {
+        Color old = g.getColor();
+        g.setColor(color);
+        g.fillOval(pos.x, pos.y, size.width, size.height);
+        g.setColor(old);
+    }
+
     public static void drawLine(Graphics g, Point from, Point to) {
         g.drawLine(from.x,from.y,to.x,to.y);
     }
 
     public static void drawVector(Graphics g, Point pos, double angle, int length){
         drawLine(g,pos,angularMovedPoint(pos,length,angle));
-    }
-
-    public static void drawRect(Graphics g,Point pos,Dimension dim){
-        g.drawRect(pos.x,pos.y,dim.width,dim.height);
     }
 
     public static void drawString(Graphics g, String s, Point pos) {
@@ -71,10 +89,25 @@ public class GUIHelper {
         drawLine(g,pos,angularMovedPoint(pos,length,angle),color);
     }
 
+    public static void drawRect(Graphics g, Point pos, Dimension dim) {
+        g.drawRect(pos.x, pos.y, dim.width, dim.height);
+    }
+
     public static void drawRect(Graphics g,Point pos,Dimension dim, Color color){
         Color old = g.getColor();
         g.setColor(color);
         g.drawRect(pos.x,pos.y,dim.width,dim.height);
+        g.setColor(old);
+    }
+
+    public static void fillRect(Graphics g, Point pos, Dimension dim) {
+        g.fillRect(pos.x, pos.y, dim.width, dim.height);
+    }
+
+    public static void fillRect(Graphics g, Point pos, Dimension dim, Color color) {
+        Color old = g.getColor();
+        g.setColor(color);
+        g.fillRect(pos.x, pos.y, dim.width, dim.height);
         g.setColor(old);
     }
 
