@@ -96,7 +96,7 @@ public class ControlWindow extends JFrame {
 
         this.shape = new ButtonGroup();
 
-        this.setLayout(new FlowLayout());
+        this.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         this.shape.add(this.shapeCircle);
         this.shape.add(this.shapeSquare);
