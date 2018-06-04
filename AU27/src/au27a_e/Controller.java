@@ -16,6 +16,11 @@ public class Controller implements ActionListener, ChangeListener {
         this.m = new Model();
         this.af = new AnzeigeFenster(this.m, this);
         this.sf = new ControlWindow(this.m, this);
+
+        this.sf.setLocationRelativeTo(this.af);
+        this.sf.setLocation(this.af.getWidth() - 15, 0);
+        this.af.setLocation(0, 0);
+
         this.sf.init();
     }
 
@@ -47,6 +52,7 @@ public class Controller implements ActionListener, ChangeListener {
             this.sf.items.get(i).setVisible(i.getState());
         }
         this.af.refresh();
+        this.sf.refresh();
     }
 
     @Override

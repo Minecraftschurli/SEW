@@ -2,6 +2,7 @@ package au27a_e;
 
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Enumeration;
@@ -44,7 +45,7 @@ public class ControlWindow extends JFrame {
         this.c = c;
 
         this.setTitle("Control-Window");
-        this.setSize(850, 380);
+        this.setSize(850, 150);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.menuBar = new JMenuBar();
@@ -55,11 +56,11 @@ public class ControlWindow extends JFrame {
         this.posGroup = new JPanel();
         this.sizeGroup = new JPanel();
         this.colorGroup = new JPanel();
-        this.styleGroup.setBorder(BorderFactory.createTitledBorder("Style:"));
-        this.shapeGroup.setBorder(BorderFactory.createTitledBorder("Shape:"));
-        this.posGroup.setBorder(BorderFactory.createTitledBorder("Position:"));
-        this.sizeGroup.setBorder(BorderFactory.createTitledBorder("Size:"));
-        this.colorGroup.setBorder(BorderFactory.createTitledBorder("Color:"));
+        this.styleGroup.setBorder(BorderFactory.createTitledBorder(null, "Style:", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION));
+        this.shapeGroup.setBorder(BorderFactory.createTitledBorder(null, "Shape:", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION));
+        this.posGroup.setBorder(BorderFactory.createTitledBorder(null, "Position:", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION));
+        this.sizeGroup.setBorder(BorderFactory.createTitledBorder(null, "Size:", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION));
+        this.colorGroup.setBorder(BorderFactory.createTitledBorder(null, "Color:", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION));
 
         this.shapeMenu = new JCheckBoxMenuItem("Shape");
         this.styleMenu = new JCheckBoxMenuItem("Style");
@@ -90,8 +91,8 @@ public class ControlWindow extends JFrame {
         this.color = new JColorChooser(this.m.getObjColor());
         this.color.removeChooserPanel(this.color.getChooserPanels()[0]);
         this.color.removeChooserPanel(this.color.getChooserPanels()[1]);
-        this.color.removeChooserPanel(this.color.getChooserPanels()[1]);
-        this.color.removeChooserPanel(this.color.getChooserPanels()[1]);
+        this.color.removeChooserPanel(this.color.getChooserPanels()[2]);
+        System.out.println(this.color.getChooserPanels()[1].toString());
         this.color.setPreviewPanel(new JPanel());
 
         this.shape = new ButtonGroup();
@@ -134,6 +135,8 @@ public class ControlWindow extends JFrame {
             jPanel.setVisible(jCheckBoxMenuItem.getState());
         });
         this.menuBar.add(this.viewMenu);
+        this.colorMenu.setState(false);
+        this.colorGroup.setVisible(this.colorMenu.getState());
 
         this.setJMenuBar(this.menuBar);
 
@@ -190,5 +193,21 @@ public class ControlWindow extends JFrame {
 
     public boolean isPosRight(JButton source) {
         return source == posRight;
+    }
+
+    public void refresh() {
+        if (this.colorMenu.getState()) this.setSize(this.getWidth(), 410);
+        else this.setSize(this.getWidth(), 150);
+        int width = 50;
+        if (this.posGroup.isVisible()) width += this.posGroup.getWidth();
+        if (this.shapeGroup.isVisible()) width += this.shapeGroup.getWidth();
+        if (this.sizeGroup.isVisible()) width += this.sizeGroup.getWidth();
+        if (this.styleGroup.isVisible()) width += this.styleGroup.getWidth();
+        if (this.colorGroup.isVisible()) width = Math.max(width, 650);
+        this.setSize(width, this.getHeight());
+        if (!this.posGroup.isVisible() && !this.shapeGroup.isVisible() && !this.sizeGroup.isVisible() && !this.styleGroup.isVisible() && this.colorGroup.isVisible()) {
+            this.setSize(getWidth(), getHeight() - 60);
+        }
+        this.repaint();
     }
 }
