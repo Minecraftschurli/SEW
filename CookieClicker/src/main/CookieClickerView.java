@@ -11,19 +11,21 @@ import java.util.Random;
 
 public class CookieClickerView extends JPanel {
 
-    private int level;
-    private final int cookiesPerLevel = 10;
     private CookieClickerControl control;
     private CookieClickerButton button;
-    private CookieClickerCookieBar bar;
-    private static final UpgradeList upgrades = new UpgradeList();
+    public static final UpgradeList upgrades = new UpgradeList();
+    private CookieClickerCookieStats cookieStats;
     private Container upgradeContainer;
     private JMenuItem debugMenu;
+    private boolean adminOverride;
+    private String adminOverrideString;
 
-    public CookieClickerView(CookieClickerButton button, CookieClickerCookieBar bar, CookieClickerControl control) {
+    public CookieClickerView(CookieClickerButton button, CookieClickerCookieStats bar, CookieClickerControl control) {
         this.control = control;
         this.button = button;
-        this.bar = bar;
+        this.cookieStats = bar;
+
+        this.adminOverride = false;
 
         this.debugMenu = new JMenuItem("Debug");
         this.debugMenu.addActionListener(this.control);
@@ -39,7 +41,7 @@ public class CookieClickerView extends JPanel {
 
             @Override
             public boolean isAvailable() {
-                return (level >= 3 && level < 5 && this.upgradeLevel < 1) || (level >= 5 && level < 10 && this.upgradeLevel < 2) || (level >= 10);
+                return true;
             }
 
             @Override
@@ -62,17 +64,45 @@ public class CookieClickerView extends JPanel {
 
             @Override
             public boolean isAvailable() {
-                return level>=10;
+                return true;
             }
 
             @Override
             public void performLoad() {
-                control.addAutoClicker(this.upgradeLevel);
+                if (upgradeLevel > 0) control.addAutoClicker(this.upgradeLevel);
             }
 
             @Override
             public int getCost() {
                 return 100 * (int) Math.pow(2, this.upgradeLevel);
+            }
+        });
+        upgrades.put(new CookieClickerUpgrade.CpSUpgrade("Grandma") {
+
+            @Override
+            public double getCpS() {
+                return 20 * upgradeLevel;
+            }
+
+            @Override
+            public void performLevelUp() {
+                removeCookies(getCost());
+                levelUp(1);
+            }
+
+            @Override
+            public boolean isAvailable() {
+                return true;
+            }
+
+            @Override
+            public void performLoad() {
+
+            }
+
+            @Override
+            public int getCost() {
+                return 20 * (int) Math.pow(2, this.upgradeLevel);
             }
         });
 
@@ -90,25 +120,13 @@ public class CookieClickerView extends JPanel {
 
         this.add(this.upgradeContainer, BorderLayout.EAST);
         this.add(this.button, BorderLayout.CENTER);
-        this.add(this.bar, BorderLayout.NORTH);
+        this.add(this.cookieStats, BorderLayout.NORTH);
         this.setMinimumSize(new Dimension(400,300));
         this.setVisible(true);
     }
 
-    private int getCookies() {
-        return this.bar.getValue();
-    }
-
-    public void levelUp() {
-        long exp = Math.round(Math.exp(this.level / 2.5)) * cookiesPerLevel;
-        exp = exp == -10 ? Integer.MAX_VALUE : exp;
-        long last = exp;
-        this.level++;
-        exp = Math.round(Math.exp(this.level / 2.5)) * cookiesPerLevel;
-        exp = exp == -10 ? Integer.MAX_VALUE : exp;
-        int max = (int)Math.min(exp,Integer.MAX_VALUE-1);
-        this.bar.setMaximum(max);
-        System.out.println("Level: " + level + " Next: " + (max - last));
+    private long getCookies() {
+        return this.cookieStats.getCookies();
     }
     
     public void upgradeButtonClicked(UpgradeButton upgradeButton) {
@@ -119,41 +137,38 @@ public class CookieClickerView extends JPanel {
                 }
             }
         });
+        reload();
     }
 
-    public void addCookies(int cookies) {
-        this.bar.addValue(cookies * (upgrades.getLevelForName("Multiplier") + 1));
-        upgrades.forEachUpgrade(upgrade -> upgrade.button.setEnabled(upgrade.isAvailable()));
+    public void addCookies(long cookies, int multiplier) {
+        this.cookieStats.addCookies(cookies * multiplier);
+        reload();
     }
 
     public void removeCookies(int cookies) {
-        this.bar.addValue(-cookies);
+        this.cookieStats.addCookies(-cookies);
     }
 
     public void processSaveFile(File saveFile) {
         try {
             boolean upgradeSection = false;
             boolean saveSection = false;
+            boolean adminOverride = false;
             String content = "";
             if (saveFile.getName().endsWith(".txt")) {
                 content = Misc.readFile(saveFile);
             } else if (saveFile.getName().endsWith(".cookie")) {
                 content = new AdvDecrypter(new Random(201L).nextInt()).decrypt(Misc.readFile(saveFile));
             }
-            content = content.replace("\t","");
             String[] lines = content.split("\n");
             for (String line : lines) {
+                line = line.replace("\t", "");
                 if (saveSection) {
                     if (line.contains("]")) {
                         saveSection = false;
                     } else {
-                        if (line.contains("Level")) {
-                            this.level = Integer.parseInt(line.substring(line.indexOf(':') + 2)) - 1;
-                            this.levelUp();
-                        }
                         if (line.contains("Cookies")) {
-                            this.bar.setValue(Integer.parseInt(line.substring(line.indexOf(':') + 2)));
-                            System.out.println("test");
+                            this.cookieStats.setCookies(Long.parseLong(line.substring(line.indexOf(':') + 2)));
                         }
                         if (upgradeSection) {
                             if (line.contains("}")) {
@@ -168,25 +183,55 @@ public class CookieClickerView extends JPanel {
                             upgradeSection = true;
                         }
                     }
+                } else if (adminOverride) {
+                    if (line.contains("}")) {
+                        adminOverride = false;
+                    }
+                    if (line.contains("Cookies")) {
+                        if (line.substring(line.indexOf(':') + 2).equals("infinite")) {
+                            this.cookieStats.setCookies(-1L);
+                        } else {
+                            this.cookieStats.setCookies(Long.parseLong(line.substring(line.indexOf(':') + 2)));
+                        }
+                    }
                 }
                 if (line.equals("[")) {
                     saveSection = true;
                 }
+                if (line.contains("AdminOverride")) {
+                    this.adminOverride = adminOverride = true;
+                    saveAdminOverride(content.substring(content.indexOf("AdminOverride"), content.indexOf('}', content.indexOf("AdminOverride"))));
+                }
+                if (line.contains("Name")) {
+                    this.control.master.setTitle(line.substring(line.indexOf(':') + 2));
+                }
             }
         } catch (Exception e) {e.printStackTrace();}
         this.button.test();
+        control.addCpsToTimer();
+    }
+
+    private void saveAdminOverride(String substring) {
+        this.adminOverrideString = substring;
     }
 
     @Override
     public String toString() {
-        String out =
-                "Level: "+this.level+"\n"+
-                        "Cookies: "+this.bar.getValue()+"\n"+
+        String out = "Cookies: " + this.cookieStats.getCookies() + "\n" +
                         "Upgrades: {\n" + upgrades.toString() + "\t}";
         return out;
     }
 
+    public String getAdminOverrideSection() {
+        return adminOverrideString != null ? adminOverrideString : "";
+    }
+
     public JMenuItem getMenu() {
         return this.debugMenu;
+    }
+
+    public void reload() {
+        upgrades.forEachUpgrade(upgrade -> upgrade.button.setEnabled(upgrade.isAvailable() && upgrade.getCost() < getCookies()));
+        this.control.master.repaint();
     }
 }

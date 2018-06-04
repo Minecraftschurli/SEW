@@ -13,11 +13,22 @@ import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static main.CookieClickerView.upgrades;
+
 public class CookieClickerControl extends App implements ActionListener, WindowListener, KeyEventDispatcher {
 
     private CookieClickerView view;
     private CookieClickerButton button;
-    private CookieClickerCookieBar bar;
+    private final TimerTask ADD_CpS = new TimerTask() {
+        @Override
+        public void run() {
+            upgrades.forEachUpgrade(upgrade -> {
+                if (upgrade instanceof CookieClickerUpgrade.CpSUpgrade) {
+                    view.addCookies((long) (((CookieClickerUpgrade.CpSUpgrade) upgrade).getCpS()), 1);
+                }
+            });
+        }
+    };
     private File saveFile;
     private Timer t = new Timer();
     private TimerTask autoClicker;
@@ -27,14 +38,15 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
             button.doClick();
         }
     };
+    private CookieClickerCookieStats stats;
     private JFrame loadSave;
     private DebugWindow debugWindow;
     private boolean debug;
 
     public CookieClickerControl(){
         this.button = new CookieClickerButton("Click");
-        this.bar = new CookieClickerCookieBar(SwingConstants.HORIZONTAL);
-        this.view = new CookieClickerView(this.button,this.bar,this);
+        this.stats = new CookieClickerCookieStats();
+        this.view = new CookieClickerView(this.button, this.stats, this);
 
         this.debugWindow = new DebugWindow("Debug", this);
 
@@ -44,10 +56,7 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.button && !this.button.isTest()){
-            this.view.addCookies(1);
-        }
-        while (this.bar.getValue() >= this.bar.getMaximum()){
-            this.view.levelUp();
+            this.view.addCookies(1, upgrades.getLevelForName("Multiplier") + 1);
         }
         if (e.getSource() instanceof UpgradeButton){
             this.view.upgradeButtonClicked((UpgradeButton) e.getSource());
@@ -107,11 +116,11 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
             }
             if (this.saveFile.getName().endsWith(".txt")){
                 FileWriter fileWriter = new FileWriter(this.saveFile);
-                fileWriter.write("[\n" + this.view.toString() + "\n]");
+                fileWriter.write((master.getTitle() != null && !master.getTitle().equals("") ? ("Name: " + master.getTitle() + "\n") : "") + "[\n" + this.view.toString() + "\n]" + view.getAdminOverrideSection());
                 fileWriter.close();
             } else if (this.saveFile.getName().endsWith(".cookie")) {
                 EncryptedWriter fileWriter = new EncryptedWriter(this.saveFile, 201L);
-                fileWriter.write("[\n" + this.view.toString() + "\n]");
+                fileWriter.write((master.getTitle() != null && !master.getTitle().equals("") ? ("Name: " + master.getTitle() + "\n") : "") + "[\n" + this.view.toString() + "\n]" + view.getAdminOverrideSection());
                 fileWriter.close();
             }
         } catch (Exception ignored) {}
@@ -152,12 +161,29 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
             }
         };
         t.scheduleAtFixedRate(autoClicker,0,10000/level);
+        TimerTask cps = new TimerTask() {
+            @Override
+            public void run() {
+                ADD_CpS.run();
+            }
+        };
+        t.scheduleAtFixedRate(cps, 0, 1000);
+    }
+
+    public void addCpsToTimer() {
+        TimerTask cps = new TimerTask() {
+            @Override
+            public void run() {
+                ADD_CpS.run();
+            }
+        };
+        t.scheduleAtFixedRate(cps, 0, 1000);
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
         if (KeyStroke.getKeyStrokeForEvent(e) == KeyStroke.getKeyStroke('a') && debug) {
-            this.bar.setValue(this.bar.getMaximum() - 1);
+            this.stats.addCookies(100000L);
         }
         return false;
     }
@@ -175,6 +201,7 @@ public class CookieClickerControl extends App implements ActionListener, WindowL
         this.master.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.master.addWindowListener(this);
         this.master.getJMenuBar().add(this.view.getMenu());
+        this.view.reload();
     }
 
     @Override

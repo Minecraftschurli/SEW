@@ -1,8 +1,13 @@
+Name: Test
 [
-Level: 48
-Cookies: 80360
+Cookies: 0
 Upgrades: {
-	Multiplier: 27
-	Autoclick: 24
-	}
+    Multiplier: 0
+    Autoclick: 0
+    Grandma: 0
+    }
 ]
+
+AdminOverride: {
+    Cookies: infinite
+    }

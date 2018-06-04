@@ -8,14 +8,14 @@ public abstract class CookieClickerUpgrade {
 
     public CookieClickerUpgrade(String name){
         this.upgradeLevel = 0;
-        this.button = new UpgradeButton("<html>" + name + " <br>Level: " + upgradeLevel + "</html>");
+        this.button = new UpgradeButton("<html>" + name + " </br>Level: " + upgradeLevel + "</html>");
         this.button.setName(name);
         this.name = name;
     }
 
     protected void levelUp(int level){
         this.upgradeLevel += level;
-        this.button.setText("<html>" + name + " <br>Level: " + upgradeLevel + "</html>");
+        this.button.setText("<html>" + name + " </br>Level: " + upgradeLevel + "</html>");
     }
 
     public abstract void performLevelUp();
@@ -38,5 +38,14 @@ public abstract class CookieClickerUpgrade {
         this.upgradeLevel = value;
         this.button.setText(this.name+" \nLevel: "+this.upgradeLevel);
         return this;
+    }
+
+    public abstract static class CpSUpgrade extends CookieClickerUpgrade {
+
+        public CpSUpgrade(String name) {
+            super(name);
+        }
+
+        public abstract double getCpS();
     }
 }

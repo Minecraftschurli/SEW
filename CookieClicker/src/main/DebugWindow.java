@@ -27,6 +27,7 @@ public class DebugWindow extends JFrame implements ActionListener {
         this.cc = cc;
 
         users.put("admin", "1234".toCharArray());
+        users.put("a", "a".toCharArray());
 
         username = new JTextField();
         passwordField = new JPasswordField();
@@ -44,6 +45,8 @@ public class DebugWindow extends JFrame implements ActionListener {
         login.add(checkButton, BorderLayout.SOUTH);
 
         checkButton.addActionListener(this);
+
+        this.setMinimumSize(new Dimension(300, 125));
     }
 
     @Override
