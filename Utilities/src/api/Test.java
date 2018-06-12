@@ -1,23 +1,15 @@
-package api.annotations;
-
-import api.encryption.DeAndEncrypt;/*
-import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;*/
+package api;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.lang.annotation.*;
-import java.lang.reflect.Method;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 
 public class Test{
 
     public static void main(String[] args) {
+
         /*for (Map.Entry entry : System.getenv().entrySet()) {
             System.out.println(entry.getNameForIndex());
             System.out.println(entry.getLevelForIndex());
@@ -37,7 +29,7 @@ public class Test{
         }*/
         //File file = chooseFile();
 
-        DeAndEncrypt.deAndEncrypt(new File(System.getenv("OneDrive") + "\\Desktop\\key.txt"));
+        //DeAndEncrypt.deAndEncrypt(new File(System.getenv("OneDrive") + "\\Desktop\\key.txt"));
 
         /*File fileIn = new File(System.getenv("OneDrive") + "\\Desktop\\in.txt");
         File fileEncrypted = new File(System.getenv("OneDrive") + "\\Desktop\\encrypted.txt");
@@ -50,6 +42,7 @@ public class Test{
         /*try {
             runAllAnnotatedWith(TestMethod.class,"GUI");
         } catch (Exception ignored) {}*/
+
     }
 
     public static File chooseFile(){

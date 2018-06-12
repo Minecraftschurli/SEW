@@ -18,6 +18,10 @@ public class AnzeigeFenster extends JFrame {
 
         this.ap = new Panel(this.m);
         this.add(this.ap);
+
+        this.ap.addMouseListener(this.c);
+        this.ap.addMouseMotionListener(this.c);
+
         this.setVisible(true);
     }
 
@@ -25,10 +29,21 @@ public class AnzeigeFenster extends JFrame {
         return ap.getSize(null);
     }
 
+
     public void refresh() {
-        int i = Math.round(Math.min(getPanelSize().height, getPanelSize().width) / 100.0f * this.m.getSizePercent());
-        Dimension newSize = new Dimension(i, i);
-        this.m.setObjSize(newSize);
+        if (this.m.getSelected() != null) {
+            int i = Math.round(Math.min(getPanelSize().height, getPanelSize().width) / 100.0f * this.m.getSizePercent());
+            Dimension newSize = new Dimension(i, i);
+            this.m.setObjSize(newSize);
+        }
         this.repaint();
+    }
+
+    public void draw(Shape shape) {
+        this.ap.draw(shape);
+    }
+
+    public Point getPanelPos() {
+        return this.ap.getLocation();
     }
 }

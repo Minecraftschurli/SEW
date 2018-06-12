@@ -1,6 +1,6 @@
 package main;
 
-import api.Misc;
+import api.FileHelper;
 import api.encryption.AdvDecrypter;
 
 import javax.swing.*;
@@ -156,9 +156,9 @@ public class CookieClickerView extends JPanel {
             boolean adminOverride = false;
             String content = "";
             if (saveFile.getName().endsWith(".txt")) {
-                content = Misc.readFile(saveFile);
+                content = FileHelper.readFile(saveFile);
             } else if (saveFile.getName().endsWith(".cookie")) {
-                content = new AdvDecrypter(new Random(201L).nextInt()).decrypt(Misc.readFile(saveFile));
+                content = new AdvDecrypter(new Random(201L).nextInt()).decrypt(FileHelper.readFile(saveFile));
             }
             String[] lines = content.split("\n");
             for (String line : lines) {

@@ -1,6 +1,7 @@
 package api.encryption;
 
 
+import api.FileHelper;
 import api.Misc;
 
 import java.io.File;
@@ -65,7 +66,7 @@ public abstract class Encrypter {
     protected abstract char encryptChar(char c);
 
     public void encryptFile(File file) throws Exception{
-        String content = Misc.readFile(file);
+        String content = FileHelper.readFile(file);
         content = encrypt(content);
         Misc.writeFile(file, content);
     }

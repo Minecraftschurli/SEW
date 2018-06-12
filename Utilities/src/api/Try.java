@@ -1,11 +1,20 @@
 package api;
 
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 
 public class Try {
-	private static Log log = new Log();
+	private static Logger logger;
+
+	static {
+		try {
+			logger = Logger.registerNewLogger("Try", true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void error(){
 		int button=0;
 		button=JOptionPane.showConfirmDialog(null, "<html><font color=#FF0000>ERROR!</font>"+"\n"+"Wollen Sie fortfahren?", "ERROR!", JOptionPane.YES_NO_OPTION, ERROR_MESSAGE);
@@ -24,7 +33,7 @@ public class Try {
 		try {
 			Thread.sleep(millisec);
 		} catch (InterruptedException e) {
-			log.log(e);
+			logger.log(e);
 			JOptionPane.showMessageDialog(null, "Error", "Error", ERROR_MESSAGE);
 		}
 	}
@@ -33,7 +42,7 @@ public class Try {
 		try {
 			return Integer.parseInt(text);
 		} catch (NumberFormatException e) {
-			log.log(e);
+			logger.log(e);
 			return 0;
 		}
 	}
@@ -42,7 +51,7 @@ public class Try {
 		try {
 			return Long.parseLong(text);
 		} catch (NumberFormatException e) {
-			log.log(e);
+			logger.log(e);
 			return 0;
 		}
 	}
@@ -51,7 +60,7 @@ public class Try {
 		try {
 			return Float.parseFloat(text);
 		} catch (NumberFormatException e) {
-			log.log(e);
+			logger.log(e);
 			return 0;
 		}
 	}
@@ -60,7 +69,7 @@ public class Try {
 		try {
 			return Double.parseDouble(text);
 		} catch (NumberFormatException e) {
-			log.log(e);
+			logger.log(e);
 			return 0;
 		}
 	}
@@ -69,7 +78,7 @@ public class Try {
         try {
             return Boolean.parseBoolean(text);
         } catch (NumberFormatException e) {
-            log.log(e);
+			logger.log(e);
             return false;
         }
     }
@@ -82,7 +91,7 @@ public class Try {
 					"liesZahl()",
 					PLAIN_MESSAGE));
 		}catch(NumberFormatException e){
-			log.log(e);
+			logger.log(e);
 			input=0;
 		}
 		return input;
@@ -100,7 +109,7 @@ public class Try {
 						messageType));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Zahlen eingeben!",
 						"Fehler",
@@ -125,7 +134,7 @@ public class Try {
 						QUESTION_MESSAGE));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Zahlen eingeben!",
 						"Fehler",
@@ -150,7 +159,7 @@ public class Try {
 						QUESTION_MESSAGE));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Zahlen eingeben!",
 						"Fehler",
@@ -175,7 +184,7 @@ public class Try {
 						messageType));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Zahlen eingeben!",
 						"Fehler",
@@ -200,7 +209,7 @@ public class Try {
 						QUESTION_MESSAGE));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Zahlen eingeben!",
 						"Fehler",
@@ -225,7 +234,7 @@ public class Try {
 						QUESTION_MESSAGE));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Zahlen eingeben!",
 						"Fehler",
@@ -250,7 +259,7 @@ public class Try {
 						messageType));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Komma Zahlen eingeben!",
 						"Fehler",
@@ -275,7 +284,7 @@ public class Try {
 						QUESTION_MESSAGE));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Komma Zahlen eingeben!",
 						"Fehler",
@@ -300,7 +309,7 @@ public class Try {
 						QUESTION_MESSAGE));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Komma Zahlen eingeben!",
 						"Fehler",
@@ -325,7 +334,7 @@ public class Try {
 						messageType));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Zahlen im Format double eingeben!",
 						"Fehler",
@@ -350,7 +359,7 @@ public class Try {
 						QUESTION_MESSAGE));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Zahlen im Format double eingeben!",
 						"Fehler",
@@ -375,7 +384,7 @@ public class Try {
 						QUESTION_MESSAGE));
 				korrekt=true;
 			}catch(NumberFormatException e){
-				log.log(e);
+				logger.log(e);
 				button=JOptionPane.showConfirmDialog(null,
 						"Das war eine Falsche Eingabe bitte nur Zahlen im Format double eingeben!",
 						"Fehler",
@@ -392,7 +401,7 @@ public class Try {
 		try {
 			return JOptionPane.showInputDialog(null, text, title, messageType);
 		} catch (Exception e) {
-			log.log(e);
+			logger.log(e);
 			return "";
 		}
 	}
@@ -401,7 +410,7 @@ public class Try {
 		try {
 			return JOptionPane.showInputDialog(null, text, title, PLAIN_MESSAGE);
 		} catch (Exception e) {
-			log.log(e);
+			logger.log(e);
 			return "";
 		}
 	}
@@ -410,7 +419,7 @@ public class Try {
 		try {
 			return JOptionPane.showInputDialog(null, text, "", PLAIN_MESSAGE);
 		} catch (Exception e) {
-			log.log(e);
+			logger.log(e);
 			return "";
 		}
 	}

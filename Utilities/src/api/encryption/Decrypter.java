@@ -1,8 +1,9 @@
 package api.encryption;
 
+import api.FileHelper;
 import api.Misc;
 
-import java.io.*;
+import java.io.File;
 
 public abstract class Decrypter{
 
@@ -26,7 +27,7 @@ public abstract class Decrypter{
     protected abstract char decryptChar(char c);
 
     public void decryptFile(File file) throws Exception{
-        String content = Misc.readFile(file);
+        String content = FileHelper.readFile(file);
         content = decrypt(content);
         Misc.writeFile(file,content);
     }

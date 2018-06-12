@@ -1,6 +1,6 @@
 package api;
 
-import java.io.*;
+import java.io.File;
 import java.lang.Boolean;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,29 +38,7 @@ public class Misc {
         return bits;
     }
 
-    public static String readFile(File file) throws Exception{
-        String content = "";
-        try {
-            FileReader reader = new FileReader(file);
-            char[] chars = new char[(int) file.length()];
-            reader.read(chars);
-            content = new String(chars);
-            reader.close();
-        } catch (IOException e) {
-            throw e;
-        }
-        return content;
-    }
-
     public static void writeFile(File file, String text){
-        try {
-            FileWriter  fileWriter = new FileWriter(file);
-            BufferedWriter printWriter = new BufferedWriter(fileWriter);
-            printWriter.write(text.replace("⪍",""));
-            printWriter.close();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FileHelper.saveToFile(text, file);
     }
 }
