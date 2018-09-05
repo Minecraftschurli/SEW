@@ -5,7 +5,6 @@ import javafx.util.Pair;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class PURI {
 
@@ -114,7 +113,7 @@ public class PURI {
 
     public void calculate() {
         if (this.dirty) return;
-        AtomicInteger i = new AtomicInteger(0);
+        java.util.concurrent.atomic.AtomicInteger i = new java.util.concurrent.atomic.AtomicInteger(0);
         map.forEach((character, aDouble) -> {
             if (aDouble == null) i.incrementAndGet();
         });
