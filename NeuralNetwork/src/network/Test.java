@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class Test {
 
-    public static String PATH = "C:\\Users\\georg\\Documents\\Schule\\SEW\\NeuralNetwork\\resources\\";
+    private static String PATH = "C:\\Users\\georg\\Documents\\Schule\\SEW\\NeuralNetwork\\resources\\";
 
     public static void main(String[] args) {
         String name = "BoolNet4";
@@ -32,7 +32,10 @@ public class Test {
         }
         if (nn == null) return;
         //endregion
+        //region train
         startTimedTrainingSession(30, nn);
+        //endregion
+        //region test
         ArrayList<Pair<Boolean, Boolean>> bs = new ArrayList<>();
         bs.add(new Pair<>(false, false));
         bs.add(new Pair<>(false, true));
@@ -44,6 +47,7 @@ public class Test {
             Double[] out = nn.getOutput();
             System.out.println("calculated: " + out[0] + " | " + out[1] + " | " + out[2] + " | " + out[3] + " | " + "wanted: " + ((b1 && b2) ? 1.0 : 0.0) + " | " + ((b1 || b2) ? 1.0 : 0.0) + " | " + (((b1 && !b2) || (!b1 && b2)) ? 1.0 : 0.0) + " | " + (((!b1 && !b2) || (b1 && b2)) ? 1.0 : 0.0));
         }
+        //endregion
         //region save
         try {
             FileOutputStream writer = new FileOutputStream(new File(PATH + nn.name + ".nn"));
