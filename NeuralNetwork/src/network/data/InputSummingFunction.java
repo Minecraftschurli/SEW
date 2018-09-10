@@ -5,7 +5,11 @@ import network.neuron.Connection;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ *
+ */
 public interface InputSummingFunction extends Serializable {
+
     /**
      * Performs calculations based on the output values of the input neurons.
      *

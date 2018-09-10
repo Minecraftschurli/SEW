@@ -14,6 +14,9 @@ public class NNLog implements Serializable {
      */
     private final NeuralNetwork nn;
 
+    /**
+     *
+     */
     protected StringBuffer log;
 
     /**

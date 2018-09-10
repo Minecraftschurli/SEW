@@ -18,24 +18,33 @@ import java.util.List;
  * </ul>
  */
 public class Neuron implements Serializable {
+
     /**
      * Collection of neuron's input connections (connections to this neuron)
      */
     public List<Connection> inputConnections;
+
     /**
      * Collection of neuron's output connections (connections from this to other
      * neurons)
      */
     protected List<Connection> outputConnections;
+
     /**
      * Input summing function for this neuron
      */
     protected InputSummingFunction inputSummingFunction;
+
     /**
      * Activation function for this neuron
      */
     protected ActivationFunction activationFunction;
+
+    /**
+     *
+     */
     protected double value;
+
     /**
      * Neuron's identifier
      */
@@ -60,31 +69,59 @@ public class Neuron implements Serializable {
         return this.value;
     }
 
+    /**
+     * @return
+     */
     protected int getId() {
         return id;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getValue() {
         return value;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "NeuronID=" + this.id;
     }
 
+    /**
+     *
+     * @param function
+     */
     public void setInputSummingFunction(InputSummingFunction function) {
         if (function != null) this.inputSummingFunction = function;
     }
 
+    /**
+     *
+     * @param function
+     */
     public void setActivationFunction(ActivationFunction function) {
         if (function != null) this.activationFunction = function;
     }
 
+    /**
+     *
+     * @return
+     */
     public int inputConnections() {
         return inputConnections.size();
     }
 
+    /**
+     *
+     * @param i
+     * @return
+     */
     public Connection getConnection(int i) {
         return inputConnections.get(i);
     }

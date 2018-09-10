@@ -1,7 +1,10 @@
 package network.data;
 
-
+/**
+ *
+ */
 public class DataSet {
+
     /**
      *
      */

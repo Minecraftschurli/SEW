@@ -10,7 +10,9 @@ import network.neuron.InputNeuron;
 import network.neuron.Neuron;
 import network.structure.InputLayer;
 import network.structure.NeuralNetLayer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -160,6 +162,8 @@ public class NeuralNetwork implements Serializable {
      * @param outputNeuronCount  the amount of output Neurons
      * @return the NeuralNetwork
      */
+    @NotNull
+    @Contract("_, _, _, _ -> new")
     public static NeuralNetwork createGenericNN(String name, int inputNeuronCount, int[] hiddenNeuronLayers, int outputNeuronCount) {
         List<InputNeuron> inputNeurons = new ArrayList<>();
         List<Neuron> outputNeurons = new ArrayList<>();
@@ -199,6 +203,8 @@ public class NeuralNetwork implements Serializable {
      * @param outputLayer
      * @return
      */
+    @NotNull
+    @Contract("_, _, _, _ -> new")
     public static NeuralNetwork createCustomNN(@NotNull String name, InputLayer inputLayer, List<NeuralNetLayer> hiddenLayers, NeuralNetLayer outputLayer) {
         return new NeuralNetwork(name, inputLayer, hiddenLayers, outputLayer);
     }
@@ -236,6 +242,7 @@ public class NeuralNetwork implements Serializable {
      * @param neuron2
      * @return
      */
+    @Nullable
     private Connection getConnection(Neuron neuron1, Neuron neuron2) {
         for (Connection con : connections) {
             if ((con.getFromNeuron() == neuron1 && con.getToNeuron() == neuron2) || (con.getFromNeuron() == neuron2 && con.getToNeuron() == neuron1)) {

@@ -5,6 +5,10 @@ import network.neuron.Connection;
 import java.util.List;
 
 public class DefaultInputSummingFunction implements InputSummingFunction {
+    /**
+     * @param inputConnections neuron's input connections
+     * @return
+     */
     @Override
     public double getOutput(List<Connection> inputConnections) {
         double sum = 0.0;
