@@ -21,6 +21,9 @@ import java.util.List;
  */
 public class NeuralNetwork implements Serializable {
 
+    /**
+     *
+     */
     private static final long serialVersionUID = 1L;
 
     /**
@@ -28,8 +31,14 @@ public class NeuralNetwork implements Serializable {
      */
     private static final double LEARNING_RATE = 0.5;
 
+    /**
+     *
+     */
     public final String name;
 
+    /**
+     *
+     */
     public final List<Connection> connections;
 
     /**
@@ -155,11 +164,12 @@ public class NeuralNetwork implements Serializable {
         List<InputNeuron> inputNeurons = new ArrayList<>();
         List<Neuron> outputNeurons = new ArrayList<>();
         List<NeuralNetLayer> hiddenLayers = new ArrayList<>();
-
+        //region input neurons
         for (int i = 0; i < inputNeuronCount; i++) {
             inputNeurons.add(i, new InputNeuron(i));
         }
-
+        //endregion
+        //region hidden neurons
         for (int i = 0; i < hiddenNeuronLayers.length; i++) {
             List<Neuron> hiddenLayerNeurons = new ArrayList<>();
             for (int j = 0; j < hiddenNeuronLayers[i]; j++) {
@@ -169,13 +179,14 @@ public class NeuralNetwork implements Serializable {
             }
             hiddenLayers.add(i, new NeuralNetLayer(i + 1, hiddenLayerNeurons));
         }
-
+        //endregion
+        //region output neurons
         for (int i = 0; i < outputNeuronCount; i++) {
             Neuron neuron = new Neuron(i);
             neuron.setActivationFunction(ActivationFunction::sigmoid);
             outputNeurons.add(neuron);
         }
-
+        //endregion
         NeuralNetLayer outputLayer = new NeuralNetLayer(hiddenLayers.size() + 1, outputNeurons);
         InputLayer inputLayer = new InputLayer(inputNeurons);
         return new NeuralNetwork(name, inputLayer, hiddenLayers, outputLayer);
@@ -220,6 +231,11 @@ public class NeuralNetwork implements Serializable {
         }
     }
 
+    /**
+     * @param neuron1
+     * @param neuron2
+     * @return
+     */
     private Connection getConnection(Neuron neuron1, Neuron neuron2) {
         for (Connection con : connections) {
             if ((con.getFromNeuron() == neuron1 && con.getToNeuron() == neuron2) || (con.getFromNeuron() == neuron2 && con.getToNeuron() == neuron1)) {
