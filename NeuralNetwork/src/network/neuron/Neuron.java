@@ -1,8 +1,8 @@
 package network.neuron;
 
-import network.ActivationFunction;
-import network.DefaultInputSummingFunction;
-import network.InputSummingFunction;
+import network.data.ActivationFunction;
+import network.data.DefaultInputSummingFunction;
+import network.data.InputSummingFunction;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class Neuron implements Serializable {
     /**
      * Collection of neuron's input connections (connections to this neuron)
      */
-    protected List<Connection> inputConnections;
+    public List<Connection> inputConnections;
     /**
      * Collection of neuron's output connections (connections from this to other
      * neurons)

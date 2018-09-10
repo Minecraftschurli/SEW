@@ -1,4 +1,4 @@
-package network;
+package network.data;
 
 import network.neuron.Connection;
 

@@ -1,4 +1,6 @@
-package network;
+package network.data;
+
+import network.NeuralNetwork;
 
 import java.io.Serializable;
 

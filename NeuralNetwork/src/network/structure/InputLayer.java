@@ -1,5 +1,6 @@
-package network;
+package network.structure;
 
+import network.NeuralNetwork;
 import network.neuron.InputNeuron;
 
 import java.util.List;

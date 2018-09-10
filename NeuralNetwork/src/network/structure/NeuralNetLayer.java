@@ -1,5 +1,6 @@
-package network;
+package network.structure;
 
+import network.NeuralNetwork;
 import network.neuron.Connection;
 import network.neuron.Neuron;
 
@@ -23,7 +24,7 @@ public class NeuralNetLayer implements Serializable {
     /**
      * Collection of neurons in this layer
      */
-    protected List<? extends Neuron> neurons;
+    public List<? extends Neuron> neurons;
 
     /**
      * Creates a layer with a list of neurons and an id.
@@ -48,16 +49,8 @@ public class NeuralNetLayer implements Serializable {
     /**
      *
      */
-    protected void populateConnections() {
+    public void populateConnections() {
         if (id > 0) this.populateInputConnections();
-        //if (id < network.getLayerCount()-2) this.populateOutputConnections();
-    }
-
-    /**
-     *
-     */
-    private void populateOutputConnections() {
-        this.neurons.forEach(neuron -> this.network.getLayer(id + 1).neurons.forEach(neuron1 -> neuron.outputConnections.add(new Connection(neuron, neuron1))));
     }
 
     /**

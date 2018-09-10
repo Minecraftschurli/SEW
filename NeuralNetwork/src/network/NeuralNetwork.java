@@ -1,10 +1,15 @@
 package network;
 
 
+import network.data.ActivationFunction;
+import network.data.DataSet;
+import network.data.NNLog;
 import network.neuron.BIASNeuron;
 import network.neuron.Connection;
 import network.neuron.InputNeuron;
 import network.neuron.Neuron;
+import network.structure.InputLayer;
+import network.structure.NeuralNetLayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -32,7 +37,7 @@ public class NeuralNetwork implements Serializable {
     /**
      *
      */
-    protected BIASNeuron biasNeuron;
+    public final BIASNeuron biasNeuron;
     /**
      *
      */
