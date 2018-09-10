@@ -3,6 +3,7 @@ package network;
 
 import javafx.util.Pair;
 import network.data.DataSet;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public class Test {
         }*/
     }
 
-    public static void runTestData(DataSet data, NeuralNetwork neuralNetwork) {
+    public static void runTestData(@NotNull DataSet data, @NotNull NeuralNetwork neuralNetwork) {
         int i = 0;
         double error;
         do {
