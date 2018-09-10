@@ -46,7 +46,7 @@ public class Test {
             boolean b1 = b.getKey(), b2 = b.getValue();
             nn.sendData(new double[]{b1 ? 1.0 : 0.0, b2 ? 1.0 : 0.0});
             Double[] out = nn.getOutput();
-            System.out.println("calculated: " + out[0] + " | " + out[1] + " | " + out[2] + " | " + out[3] + " | " + "wanted: " + ((b1 && b2) ? 1.0 : 0.0) + " | " + ((b1 || b2) ? 1.0 : 0.0) + " | " + (((b1 && !b2) || (!b1 && b2)) ? 1.0 : 0.0) + " | " + (((!b1 && !b2) || (b1 && b2)) ? 1.0 : 0.0));
+            System.out.println("calculated: " + (out[0] > 0.5 ? 1.0 : 0.0) + " | " + (out[1] > 0.5 ? 1.0 : 0.0) + " | " + (out[2] > 0.5 ? 1.0 : 0.0) + " | " + (out[3] > 0.5 ? 1.0 : 0.0) + " | " + "wanted: " + ((b1 && b2) ? 1.0 : 0.0) + " | " + ((b1 || b2) ? 1.0 : 0.0) + " | " + (((b1 && !b2) || (!b1 && b2)) ? 1.0 : 0.0) + " | " + (((!b1 && !b2) || (b1 && b2)) ? 1.0 : 0.0));
         }
         //endregion
         //region save
@@ -60,7 +60,7 @@ public class Test {
         //endregion
     }
 
-    private static void startTimedTrainingSession(int time, NeuralNetwork nn) {
+    private static void startTimedTrainingSession(int time, @NotNull NeuralNetwork nn) {
         long startTime = System.currentTimeMillis();
         double[][][] data = new double[10][][];
         Random r = new Random();
@@ -85,7 +85,7 @@ public class Test {
         }
     }
 
-    private static void startTrainingSession(int length, NeuralNetwork neuralNetwork) {
+    private static void startTrainingSession(int length, @NotNull NeuralNetwork neuralNetwork) {
         double[][][] data = new double[50][][];
         Random r = new Random();
 
