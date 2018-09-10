@@ -2,10 +2,10 @@ package api.gui;
 
 import api.Try;
 import api.annotations.TestMethod;
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author georg

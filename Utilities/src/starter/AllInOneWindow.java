@@ -8,9 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class AllInOneWindow extends JFrame implements ActionListener {
@@ -26,8 +26,9 @@ public class AllInOneWindow extends JFrame implements ActionListener {
         bar = new JMenuBar();
         apps.forEach((s, aClass) -> {
             try {
-                windows.put(s,aClass.newInstance());
-            } catch (InstantiationException | IllegalAccessException ignored) {}
+                windows.put(s, aClass.getDeclaredConstructor().newInstance());
+            } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException ignored) {
+            }
         });
         windows.forEach((s, app) -> {
             app.master = this;
