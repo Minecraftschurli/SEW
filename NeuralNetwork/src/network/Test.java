@@ -14,10 +14,12 @@ public class Test {
     public static String PATH = "C:\\Users\\georg\\Documents\\Schule\\SEW\\NeuralNetwork\\resources\\";
 
     public static void main(String[] args) {
-        String name = "BoolNet";
+        String name = "BoolNet4";
         File f = new File(PATH + name + ".nn");
         NeuralNetwork nn = null;
-        if (!f.exists()) nn = NeuralNetwork.createGenericNN(name, 2, new int[]{4, 4}, 4);
+        if (!f.exists()) {
+            nn = NeuralNetwork.createGenericNN(name, 2, new int[]{6, 8, 6}, 4);
+        }
         else {
             try {
                 FileInputStream reader = new FileInputStream(f);
@@ -28,7 +30,7 @@ public class Test {
             }
         }
         if (nn == null) return;
-        startTrainingSession(100000, nn);
+        startTimedTrainingSession(30, nn);
         ArrayList<Pair<Boolean, Boolean>> bs = new ArrayList<>();
         bs.add(new Pair<>(false, false));
         bs.add(new Pair<>(false, true));
@@ -50,11 +52,12 @@ public class Test {
         }
     }
 
-    private static void startTrainingSession(int length, NeuralNetwork neuralNetwork) {
-        double[][][] data = new double[50][][];
+    private static void startTimedTrainingSession(int time, NeuralNetwork nn) {
+        long startTime = System.currentTimeMillis();
+        double[][][] data = new double[10][][];
         Random r = new Random();
-
-        for (int i = 0; i < length; i++) {
+        while (System.currentTimeMillis() < startTime + (time * 1000 * 60)) {
+            //region calc
             for (int j = 0; j < data.length; j++) {
                 double d1, d2, o1, o2, o3, o4;
                 boolean b1, b2;
@@ -68,7 +71,32 @@ public class Test {
                 o4 = ((!b1 && !b2) || (b1 && b2)) ? 1.0 : 0.0;
                 data[j] = new double[][]{{d1, d2}, {o1, o2, o3, o4}};
             }
+            //endregion
+            DataSet dataSet = new DataSet(data);
+            nn.train(dataSet);
+        }
+    }
 
+    private static void startTrainingSession(int length, NeuralNetwork neuralNetwork) {
+        double[][][] data = new double[50][][];
+        Random r = new Random();
+
+        for (int i = 0; i < length; i++) {
+            //region calc
+            for (int j = 0; j < data.length; j++) {
+                double d1, d2, o1, o2, o3, o4;
+                boolean b1, b2;
+                b1 = r.nextBoolean();
+                b2 = r.nextBoolean();
+                d1 = b1 ? 1.0 : 0.0;
+                d2 = b2 ? 1.0 : 0.0;
+                o1 = (b1 && b2) ? 1.0 : 0.0;
+                o2 = (b1 || b2) ? 1.0 : 0.0;
+                o3 = ((b1 && !b2) || (!b1 && b2)) ? 1.0 : 0.0;
+                o4 = ((!b1 && !b2) || (b1 && b2)) ? 1.0 : 0.0;
+                data[j] = new double[][]{{d1, d2}, {o1, o2, o3, o4}};
+            }
+            //endregion
             DataSet dataSet = new DataSet(data);
             neuralNetwork.train(dataSet);
         }

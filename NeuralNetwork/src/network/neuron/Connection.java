@@ -19,6 +19,8 @@ public class Connection implements Serializable {
      */
     protected Neuron toNeuron;
 
+    private double deltaWeight;
+
     /**
      * Connection weight
      */
@@ -34,7 +36,8 @@ public class Connection implements Serializable {
         this.fromNeuron = fromNeuron;
         this.toNeuron = toNeuron;
         this.weight = Math.random();
-        System.out.println(weight);
+
+        //System.out.println(weight);
     }
 
     /**
@@ -107,5 +110,13 @@ public class Connection implements Serializable {
     @Override
     public String toString() {
         return "From: " + fromNeuron.toString() + " To: " + toNeuron.toString();
+    }
+
+    public double getDeltaWeight() {
+        return deltaWeight;
+    }
+
+    public void setDeltaWeight(double deltaWeight) {
+        this.deltaWeight = deltaWeight;
     }
 }

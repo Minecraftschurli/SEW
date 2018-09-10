@@ -57,7 +57,14 @@ public class NeuralNetLayer implements Serializable {
      *
      */
     private void populateInputConnections() {
-        this.neurons.forEach(neuron -> network.getLayer(id - 1).neurons.forEach(neuron1 -> neuron.inputConnections.add(new Connection(neuron1, neuron))));
-        this.neurons.forEach(neuron -> neuron.inputConnections.add(new Connection(network.biasNeuron, neuron)));
+        this.neurons.forEach(neuron -> network.getLayer(id - 1).neurons.forEach(neuron1 -> {
+            Connection c = new Connection(neuron1, neuron);
+            neuron.inputConnections.add(c);
+            network.connections.add(c);
+        }));
+        this.neurons.forEach(neuron -> {
+            Connection c = new Connection(network.biasNeuron, neuron);
+            neuron.inputConnections.add(c);
+        });
     }
 }

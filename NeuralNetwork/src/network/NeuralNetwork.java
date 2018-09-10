@@ -26,30 +26,37 @@ public class NeuralNetwork implements Serializable {
     /**
      *
      */
-    private static final double LEARNING_RATE = 0.05;
+    private static final double LEARNING_RATE = 0.5;
 
     public final String name;
+
+    public final List<Connection> connections;
+
     /**
      *
      */
-    public boolean consoleLog = false;
     protected NNLog log;
+
     /**
      *
      */
     public final BIASNeuron biasNeuron;
+
     /**
      *
      */
     private InputLayer inputLayer;
+
     /**
      *
      */
     private List<NeuralNetLayer> hiddenLayers;
+
     /**
      *
      */
     private NeuralNetLayer outputLayer;
+
     /**
      *
      */
@@ -62,6 +69,7 @@ public class NeuralNetwork implements Serializable {
      * @param outputLayer
      */
     private NeuralNetwork(String name, InputLayer inputLayer, List<NeuralNetLayer> hiddenLayers, NeuralNetLayer outputLayer) {
+        this.connections = new ArrayList<>();
         this.name = name;
         this.biasNeuron = new BIASNeuron();
         this.inputLayer = inputLayer;
@@ -74,47 +82,6 @@ public class NeuralNetwork implements Serializable {
         this.hiddenLayers.forEach(NeuralNetLayer::populateConnections);
         this.outputLayer.populateConnections();
         log = new NNLog(this);
-    }
-
-    /**
-     * @param name               the Name of the NeuralNetwork
-     * @param inputNeuronCount   the amount of input Neurons
-     * @param hiddenNeuronLayers the amounts of hidden Neurons in each layer
-     * @param outputNeuronCount  the amount of output Neurons
-     * @return the NeuralNetwork
-     */
-    public static NeuralNetwork createGenericNN(String name, int inputNeuronCount, int[] hiddenNeuronLayers, int outputNeuronCount) {
-        List<InputNeuron> inputNeurons = new ArrayList<>();
-        List<Neuron> outputNeurons = new ArrayList<>();
-        List<NeuralNetLayer> hiddenLayers = new ArrayList<>();
-
-        for (int i = 0; i < inputNeuronCount; i++) {
-            inputNeurons.add(i, new InputNeuron(i));
-        }
-
-        for (int i = 0; i < hiddenNeuronLayers.length; i++) {
-            List<Neuron> hiddenLayerNeurons = new ArrayList<>();
-            for (int j = 0; j < hiddenNeuronLayers[i]; j++) {
-                Neuron neuron = new Neuron(j);
-                neuron.setActivationFunction(ActivationFunction::sigmoid);
-                hiddenLayerNeurons.add(j, neuron);
-            }
-            hiddenLayers.add(i, new NeuralNetLayer(i + 1, hiddenLayerNeurons));
-        }
-
-        for (int i = 0; i < outputNeuronCount; i++) {
-            Neuron neuron = new Neuron(i);
-            neuron.setActivationFunction(ActivationFunction::sigmoid);
-            outputNeurons.add(neuron);
-        }
-
-        NeuralNetLayer outputLayer = new NeuralNetLayer(hiddenLayers.size() + 1, outputNeurons);
-        InputLayer inputLayer = new InputLayer(inputNeurons);
-        return new NeuralNetwork(name, inputLayer, hiddenLayers, outputLayer);
-    }
-
-    public static NeuralNetwork createCustomNN(@NotNull String name, InputLayer inputLayer, List<NeuralNetLayer> hiddenLayers, NeuralNetLayer outputLayer) {
-        return new NeuralNetwork(name, inputLayer, hiddenLayers, outputLayer);
     }
 
     /**
@@ -178,35 +145,88 @@ public class NeuralNetwork implements Serializable {
     }
 
     /**
+     * @param name               the Name of the NeuralNetwork
+     * @param inputNeuronCount   the amount of input Neurons
+     * @param hiddenNeuronLayers the amounts of hidden Neurons in each layer
+     * @param outputNeuronCount  the amount of output Neurons
+     * @return the NeuralNetwork
+     */
+    public static NeuralNetwork createGenericNN(String name, int inputNeuronCount, int[] hiddenNeuronLayers, int outputNeuronCount) {
+        List<InputNeuron> inputNeurons = new ArrayList<>();
+        List<Neuron> outputNeurons = new ArrayList<>();
+        List<NeuralNetLayer> hiddenLayers = new ArrayList<>();
+
+        for (int i = 0; i < inputNeuronCount; i++) {
+            inputNeurons.add(i, new InputNeuron(i));
+        }
+
+        for (int i = 0; i < hiddenNeuronLayers.length; i++) {
+            List<Neuron> hiddenLayerNeurons = new ArrayList<>();
+            for (int j = 0; j < hiddenNeuronLayers[i]; j++) {
+                Neuron neuron = new Neuron(j);
+                neuron.setActivationFunction(i % 2 == 0 ? ActivationFunction::sigmoid : ActivationFunction::ReLu);
+                hiddenLayerNeurons.add(j, neuron);
+            }
+            hiddenLayers.add(i, new NeuralNetLayer(i + 1, hiddenLayerNeurons));
+        }
+
+        for (int i = 0; i < outputNeuronCount; i++) {
+            Neuron neuron = new Neuron(i);
+            neuron.setActivationFunction(ActivationFunction::sigmoid);
+            outputNeurons.add(neuron);
+        }
+
+        NeuralNetLayer outputLayer = new NeuralNetLayer(hiddenLayers.size() + 1, outputNeurons);
+        InputLayer inputLayer = new InputLayer(inputNeurons);
+        return new NeuralNetwork(name, inputLayer, hiddenLayers, outputLayer);
+    }
+
+    /**
+     * @param name
+     * @param inputLayer
+     * @param hiddenLayers
+     * @param outputLayer
+     * @return
+     */
+    public static NeuralNetwork createCustomNN(@NotNull String name, InputLayer inputLayer, List<NeuralNetLayer> hiddenLayers, NeuralNetLayer outputLayer) {
+        return new NeuralNetwork(name, inputLayer, hiddenLayers, outputLayer);
+    }
+
+    /**
      * @param target
      * @param error
      * @param actual
      */
     private void adjustWeights(double error, double[] target, Double[] actual) {
-        //String s, ss;
         for (int i = this.getLayerCount(); i > 0; i--) {
             NeuralNetLayer l = this.getLayer(i);
             for (int j = 0; j < l.neurons.size(); j++) {
                 Neuron n = l.neurons.get(j);
                 for (int k = 0; k < n.inputConnections(); k++) {
                     Connection c = n.getConnection(k);
-                    //s = "Changing: " + c.toString() + "\n" + "From: " + c.getWeight() + "\n";
                     if (l == outputLayer) {
-                        Double d = c.getWeight() - LEARNING_RATE * (-(actual[j] * c.getFromNeuron().getValue() * (1 - actual[j]) * (target[j] - actual[j])));
-                        if (d.isInfinite() || d.isNaN()) {
-                            //ss = d + "\n" + c.getWeight() + "\n" + actual[j] + " | " + c.getFromNeuron().getValue() + " | " + target[j] + "\n" + (-(actual[j] * c.getFromNeuron().getValue() * (1 - actual[j]) * (target[j] - actual[j])));
-                            //log.log(ss);
-                            //if (consoleLog) System.out.println(ss);
-                        }
-                        c.setWeight(d);
+                        c.setDeltaWeight((-(actual[j] * c.getFromNeuron().getValue() * (1 - actual[j]) * (target[j] - actual[j]))));
                     } else {
-
+                        double sum = 0;
+                        for (Neuron neuron : getLayer(l.id + 1).neurons) {
+                            sum += getConnection(n, neuron).getDeltaWeight();
+                        }
+                        c.setDeltaWeight(sum * (n.getValue() * (1 - n.getValue())) * c.getFromNeuron().getValue());
                     }
-                    //s += "To: " + c.getWeight() + "\n";
-                    //log.log(s);
-                    //if (consoleLog) System.out.println(s);
+                    double d = c.getWeight() - LEARNING_RATE * c.getDeltaWeight();
+                    c.setWeight(d);
                 }
             }
         }
     }
+
+    private Connection getConnection(Neuron neuron1, Neuron neuron2) {
+        for (Connection con : connections) {
+            if ((con.getFromNeuron() == neuron1 && con.getToNeuron() == neuron2) || (con.getFromNeuron() == neuron2 && con.getToNeuron() == neuron1)) {
+                return con;
+            }
+        }
+        return null;
+    }
+
 }
