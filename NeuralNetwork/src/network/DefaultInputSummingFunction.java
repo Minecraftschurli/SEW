@@ -1,5 +1,7 @@
 package network;
 
+import network.neuron.Connection;
+
 import java.util.List;
 
 public class DefaultInputSummingFunction implements InputSummingFunction {

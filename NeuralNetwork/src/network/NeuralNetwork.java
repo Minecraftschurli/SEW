@@ -1,6 +1,10 @@
 package network;
 
 
+import network.neuron.BIASNeuron;
+import network.neuron.Connection;
+import network.neuron.InputNeuron;
+import network.neuron.Neuron;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -87,8 +91,7 @@ public class NeuralNetwork implements Serializable {
             List<Neuron> hiddenLayerNeurons = new ArrayList<>();
             for (int j = 0; j < hiddenNeuronLayers[i]; j++) {
                 Neuron neuron = new Neuron(j);
-                neuron.inputSummingFunction = new DefaultInputSummingFunction();
-                neuron.activationFunction = ActivationFunction::sigmoid;
+                neuron.setActivationFunction(ActivationFunction::sigmoid);
                 hiddenLayerNeurons.add(j, neuron);
             }
             hiddenLayers.add(i, new NeuralNetLayer(i + 1, hiddenLayerNeurons));
@@ -96,8 +99,7 @@ public class NeuralNetwork implements Serializable {
 
         for (int i = 0; i < outputNeuronCount; i++) {
             Neuron neuron = new Neuron(i);
-            neuron.inputSummingFunction = new DefaultInputSummingFunction();
-            neuron.activationFunction = ActivationFunction::sigmoid;
+            neuron.setActivationFunction(ActivationFunction::sigmoid);
             outputNeurons.add(neuron);
         }
 
@@ -176,28 +178,28 @@ public class NeuralNetwork implements Serializable {
      * @param actual
      */
     private void adjustWeights(double error, double[] target, Double[] actual) {
-        String s, ss;
+        //String s, ss;
         for (int i = this.getLayerCount(); i > 0; i--) {
             NeuralNetLayer l = this.getLayer(i);
             for (int j = 0; j < l.neurons.size(); j++) {
                 Neuron n = l.neurons.get(j);
-                for (int k = 0; k < n.inputConnections.size(); k++) {
-                    Connection c = n.inputConnections.get(k);
-                    s = "Changing: " + c.toString() + "\n" + "From: " + c.getWeight() + "\n";
+                for (int k = 0; k < n.inputConnections(); k++) {
+                    Connection c = n.getConnection(k);
+                    //s = "Changing: " + c.toString() + "\n" + "From: " + c.getWeight() + "\n";
                     if (l == outputLayer) {
                         Double d = c.getWeight() - LEARNING_RATE * (-(actual[j] * c.getFromNeuron().getValue() * (1 - actual[j]) * (target[j] - actual[j])));
                         if (d.isInfinite() || d.isNaN()) {
-                            ss = d + "\n" + c.getWeight() + "\n" + actual[j] + " | " + c.getFromNeuron().getValue() + " | " + target[j] + "\n" + (-(actual[j] * c.getFromNeuron().getValue() * (1 - actual[j]) * (target[j] - actual[j])));
-                            log.log(ss);
-                            if (consoleLog) System.out.println(ss);
+                            //ss = d + "\n" + c.getWeight() + "\n" + actual[j] + " | " + c.getFromNeuron().getValue() + " | " + target[j] + "\n" + (-(actual[j] * c.getFromNeuron().getValue() * (1 - actual[j]) * (target[j] - actual[j])));
+                            //log.log(ss);
+                            //if (consoleLog) System.out.println(ss);
                         }
                         c.setWeight(d);
                     } else {
 
                     }
-                    s += "To: " + c.getWeight() + "\n";
+                    //s += "To: " + c.getWeight() + "\n";
                     //log.log(s);
-                    if (consoleLog) System.out.println(s);
+                    //if (consoleLog) System.out.println(s);
                 }
             }
         }

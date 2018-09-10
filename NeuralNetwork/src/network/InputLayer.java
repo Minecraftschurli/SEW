@@ -1,5 +1,7 @@
 package network;
 
+import network.neuron.InputNeuron;
+
 import java.util.List;
 
 public class InputLayer extends NeuralNetLayer {

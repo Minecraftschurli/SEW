@@ -1,4 +1,6 @@
-package network;
+package network.neuron;
+
+import network.NeuralNetwork;
 
 public class InputNeuron extends Neuron {
     protected NeuralNetwork network;

@@ -1,4 +1,8 @@
-package network;
+package network.neuron;
+
+import network.ActivationFunction;
+import network.DefaultInputSummingFunction;
+import network.InputSummingFunction;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -44,6 +48,7 @@ public class Neuron implements Serializable {
         this.id = id;
         this.inputConnections = new ArrayList<>();
         this.outputConnections = new ArrayList<>();
+        this.inputSummingFunction = new DefaultInputSummingFunction();
     }
 
     /**
@@ -66,5 +71,21 @@ public class Neuron implements Serializable {
     @Override
     public String toString() {
         return "NeuronID=" + this.id;
+    }
+
+    public void setInputSummingFunction(InputSummingFunction function) {
+        if (function != null) this.inputSummingFunction = function;
+    }
+
+    public void setActivationFunction(ActivationFunction function) {
+        if (function != null) this.activationFunction = function;
+    }
+
+    public int inputConnections() {
+        return inputConnections.size();
+    }
+
+    public Connection getConnection(int i) {
+        return inputConnections.get(i);
     }
 }

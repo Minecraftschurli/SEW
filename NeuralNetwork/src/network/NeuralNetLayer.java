@@ -1,5 +1,8 @@
 package network;
 
+import network.neuron.Connection;
+import network.neuron.Neuron;
+
 import java.io.Serializable;
 import java.util.List;
 
