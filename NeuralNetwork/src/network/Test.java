@@ -15,12 +15,12 @@ public class Test {
     private static String PATH = "C:\\Users\\georg\\Documents\\Schule\\SEW\\NeuralNetwork\\resources\\";
 
     public static void main(String[] args) {
-        String name = "BoolNet4";
+        String name = "BoolNet5";
         //region load
         File f = new File(PATH + name + ".nn");
         NeuralNetwork nn = null;
         if (!f.exists()) {
-            nn = NeuralNetwork.createGenericNN(name, 2, new int[]{6, 8, 6}, 4);
+            nn = NeuralNetwork.createGenericNN(name, 2, new int[]{8, 12, 8}, 4);
         }
         else {
             try {
@@ -34,7 +34,7 @@ public class Test {
         if (nn == null) return;
         //endregion
         //region train
-        startTimedTrainingSession(30, nn);
+        startTimedTrainingSession(10 * 60, nn);
         //endregion
         //region test
         ArrayList<Pair<Boolean, Boolean>> bs = new ArrayList<>();
@@ -58,13 +58,16 @@ public class Test {
         } catch (IOException ignored) {
         }
         //endregion
+        //region visualize
+        Visualisation.visualize(nn);
+        //endregion
     }
 
     private static void startTimedTrainingSession(int time, @NotNull NeuralNetwork nn) {
         long startTime = System.currentTimeMillis();
         double[][][] data = new double[10][][];
         Random r = new Random();
-        while (System.currentTimeMillis() < startTime + (time * 1000 * 60)) {
+        while (System.currentTimeMillis() < startTime + (time * 1000)) {
             //region calc
             for (int j = 0; j < data.length; j++) {
                 double d1, d2, o1, o2, o3, o4;
