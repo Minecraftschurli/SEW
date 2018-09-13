@@ -1,8 +1,11 @@
-package network;
+package testing;
 
 
 import javafx.util.Pair;
+import network.NeuralNetwork;
+import network.Visualisation;
 import network.data.DataSet;
+import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -12,15 +15,20 @@ import java.util.Random;
 
 public class Test {
 
-    private static String PATH = "C:\\Users\\georg\\Documents\\Schule\\SEW\\NeuralNetwork\\resources\\";
+    private static final String PATH = "C:\\Users\\georg\\Documents\\Schule\\SEW\\NeuralNetwork\\resources\\";
+
+    private static final int S = 1;
+    private static final int M = S * 60;
+    private static final int H = M * 60;
+    private static final int D = H * 24;
 
     public static void main(String[] args) {
-        String name = "BoolNet5";
+        String name = "BoolNet7";
         //region load
         File f = new File(PATH + name + ".nn");
         NeuralNetwork nn = null;
         if (!f.exists()) {
-            nn = NeuralNetwork.createGenericNN(name, 2, new int[]{8, 12, 8}, 4);
+            nn = NeuralNetwork.createGenericNN(name, 2, new int[]{8, 12, 16, 12, 8}, 4);
         }
         else {
             try {
@@ -34,7 +42,7 @@ public class Test {
         if (nn == null) return;
         //endregion
         //region train
-        startTimedTrainingSession(10 * 60, nn);
+        startTimedTrainingSession(30, M, nn);
         //endregion
         //region test
         ArrayList<Pair<Boolean, Boolean>> bs = new ArrayList<>();
@@ -46,15 +54,16 @@ public class Test {
             boolean b1 = b.getKey(), b2 = b.getValue();
             nn.sendData(new double[]{b1 ? 1.0 : 0.0, b2 ? 1.0 : 0.0});
             Double[] out = nn.getOutput();
-            System.out.println("calculated: " + (out[0] > 0.5 ? 1.0 : 0.0) + " | " + (out[1] > 0.5 ? 1.0 : 0.0) + " | " + (out[2] > 0.5 ? 1.0 : 0.0) + " | " + (out[3] > 0.5 ? 1.0 : 0.0) + " | " + "wanted: " + ((b1 && b2) ? 1.0 : 0.0) + " | " + ((b1 || b2) ? 1.0 : 0.0) + " | " + (((b1 && !b2) || (!b1 && b2)) ? 1.0 : 0.0) + " | " + (((!b1 && !b2) || (b1 && b2)) ? 1.0 : 0.0));
+            System.out.println("calculated: " + (out[0] /*< 0.5 ? 0.0 : 1.0*/) + " | " + (out[1] /*< 0.5 ? 0.0 : 1.0*/) + " | " + (out[2] /*< 0.5 ? 0.0 : 1.0*/) + " | " + (out[3] /*< 0.5 ? 0.0 : 1.0*/) + " | " + "wanted: " + ((b1 && b2) ? 1.0 : 0.0) + " | " + ((b1 || b2) ? 1.0 : 0.0) + " | " + (((b1 && !b2) || (!b1 && b2)) ? 1.0 : 0.0) + " | " + (((!b1 && !b2) || (b1 && b2)) ? 1.0 : 0.0));
         }
         //endregion
         //region save
         try {
-            FileOutputStream writer = new FileOutputStream(new File(PATH + nn.name + ".nn"));
-            ObjectOutputStream os = new ObjectOutputStream(writer);
-            os.writeObject(nn);
-            writer.close();
+            FileOutputStream fos = new FileOutputStream(new File(PATH + nn.name + ".nn"));
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(nn);
+            oos.close();
+            fos.close();
         } catch (IOException ignored) {
         }
         //endregion
@@ -63,8 +72,9 @@ public class Test {
         //endregion
     }
 
-    private static void startTimedTrainingSession(int time, @NotNull NeuralNetwork nn) {
+    private static void startTimedTrainingSession(int timeIn, @MagicConstant(intValues = {S, M, H, D}) int type, @NotNull NeuralNetwork nn) {
         long startTime = System.currentTimeMillis();
+        int time = timeIn * type;
         double[][][] data = new double[10][][];
         Random r = new Random();
         while (System.currentTimeMillis() < startTime + (time * 1000)) {

@@ -65,6 +65,7 @@ public class AllInOneWindow extends JFrame implements ActionListener {
     public static void main(String[] args) {
         AllInOneWindow.apps.put("Cookie",CookieClickerControl.class);
         AllInOneWindow.apps.put("Clock",ClockControl.class);
+        //AllInOneWindow.apps.put("Draw",)
         AllInOneWindow w = new AllInOneWindow();
     }
 }

@@ -20,6 +20,10 @@ import java.util.List;
 
 /**
  *
+ * @author Georg Burkl
+ * @version 2018-09-13
+ *
+ * @see java.io.Serializable
  */
 public class NeuralNetwork implements Serializable {
 
@@ -31,7 +35,7 @@ public class NeuralNetwork implements Serializable {
     /**
      *
      */
-    private static final double LEARNING_RATE = 0.5;
+    private static final double LEARNING_RATE = 0.01;
 
     /**
      *
@@ -74,10 +78,10 @@ public class NeuralNetwork implements Serializable {
     private double[] input;
 
     /**
-     * @param name
-     * @param inputLayer
-     * @param hiddenLayers
-     * @param outputLayer
+     * @param name the Name of the {@link NeuralNetwork}
+     * @param inputLayer the {@link InputLayer} of the {@link NeuralNetwork}
+     * @param hiddenLayers a {@link java.util.List} of {@link NeuralNetLayer} as hidden layers
+     * @param outputLayer a {@link NeuralNetLayer} as the output layer
      */
     private NeuralNetwork(String name, InputLayer inputLayer, List<NeuralNetLayer> hiddenLayers, NeuralNetLayer outputLayer) {
         this.connections = new ArrayList<>();
