@@ -24,7 +24,7 @@ public class Test {
     private static final int D = H * 24;
     //endregion
 
-    private static final String PATH = "C:\\Users\\georg\\Documents\\Schule\\SEW\\NeuralNetwork\\resources\\";
+    private static final String SAVE_PATH = "C:\\Users\\georg\\Documents\\Schule\\SEW\\NeuralNetwork\\resources\\";
 
     private static final String NAME = "BasicBoolNet2";
     private static final int TIME = (8 * H) + (10 * M);
@@ -32,7 +32,7 @@ public class Test {
     private static final int[] HIDDEN_NEURONS = {4, 4, 4};
     private static final int OUTPUT_NEURONS = 2;
     private static final TrainingDataGenerator DATA_GENERATOR = () ->
-    {
+    {//generator
         Random r = new Random();
         boolean b1, b2;
         b1 = r.nextBoolean();
@@ -42,7 +42,7 @@ public class Test {
 
     public static void main(String[] args) {
         //region load
-        File f = new File(PATH + NAME + ".nn");
+        File f = new File(SAVE_PATH + NAME + ".nn");
         NeuralNetwork nn = null;
         if (!f.exists()) {
             nn = NeuralNetwork.createGenericNN(NAME, INPUT_NEURONS, HIDDEN_NEURONS, OUTPUT_NEURONS);
@@ -59,7 +59,7 @@ public class Test {
         if (nn == null) return;
         //endregion
         //region train
-        Trainer t = new Trainer(PATH, nn, DATA_GENERATOR);
+        Trainer t = new Trainer(SAVE_PATH, nn, DATA_GENERATOR);
         t.startTimedTrainingSession(TIME, (short) 10);
         //endregion
         //region test
@@ -76,7 +76,7 @@ public class Test {
         }
         //endregion
         //region save
-        nn.save(PATH, nn.name);
+        nn.save(SAVE_PATH, nn.name);
         //endregion
         //region visualize
         Visualisation.visualize(nn);
