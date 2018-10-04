@@ -13,8 +13,9 @@ import network.structure.NeuralNetLayer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import training.TrainingStatus;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,8 @@ public class NeuralNetwork implements Serializable {
      *
      */
     public final String name;
+
+    private TrainingStatus trainingStatus;
 
     /**
      *
@@ -97,6 +100,7 @@ public class NeuralNetwork implements Serializable {
         this.hiddenLayers.forEach(NeuralNetLayer::populateConnections);
         this.outputLayer.populateConnections();
         log = new NNLog(this);
+        this.trainingStatus = TrainingStatus.UNTRAINED;
     }
 
     /**
@@ -148,14 +152,17 @@ public class NeuralNetwork implements Serializable {
     /**
      * @param trainingData
      */
-    public void train(DataSet trainingData) {
+    public void train(DataSet trainingData) throws AlreadyTrainedException {
+        if (trainingStatus == TrainingStatus.TRAINED) throw new AlreadyTrainedException(this);
+        if (trainingStatus == TrainingStatus.UNTRAINED)
+            trainingStatus = TrainingStatus.TRAINING;
         double error = 0;
         for (int i = 0; i < trainingData.size(); i++) {
             double[] data = trainingData.getTest(i);
             this.sendData(data);
             Double[] output = this.getOutput();
             error = trainingData.calcError(i, output);
-            this.adjustWeights(error, trainingData.getOutput(i), output);
+            this.adjustWeights(trainingData.getOutput(i), output);
         }
     }
 
@@ -215,10 +222,9 @@ public class NeuralNetwork implements Serializable {
 
     /**
      * @param target
-     * @param error
      * @param actual
      */
-    private void adjustWeights(double error, double[] target, Double[] actual) {
+    private void adjustWeights(double[] target, Double[] actual) {
         for (int i = this.getLayerCount(); i > 0; i--) {
             NeuralNetLayer l = this.getLayer(i);
             for (int j = 0; j < l.neurons.size(); j++) {
@@ -256,4 +262,53 @@ public class NeuralNetwork implements Serializable {
         return null;
     }
 
+    /**
+     * @param path
+     * @param name
+     */
+    public synchronized void save(String path, String name) {
+        try {
+            FileOutputStream fos = new FileOutputStream(new File(path + name + ".nn"));
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(this);
+            oos.close();
+            fos.close();
+        } catch (IOException ignored) {
+        }
+    }
+
+    /**
+     *
+     */
+    public void setTrained() {
+        this.trainingStatus = TrainingStatus.TRAINED;
+    }
+
+    /**
+     *
+     */
+    public void setTraining() {
+        this.trainingStatus = TrainingStatus.TRAINING;
+    }
+
+    public int getInputNeuronCount() {
+        return inputLayer.neurons.size();
+    }
+
+    public int getOutputNeuronCount() {
+        return outputLayer.neurons.size();
+    }
+
+    public class AlreadyTrainedException extends Exception {
+        private final NeuralNetwork nn;
+
+        public AlreadyTrainedException(NeuralNetwork nn) {
+            this.nn = nn;
+        }
+
+        @Override
+        public String getMessage() {
+            return nn.name + "is already fully Trained";
+        }
+    }
 }

@@ -4,9 +4,16 @@ package api;
 public class Boolean {
 
     public static boolean parseBoolean(String text) throws NumberFormatException{
-		if (text.equals("true")||text.equals("1")) return true;
-		else if(text.equals("false")||text.equals("0")) return false;
-		else throw new NumberFormatException(text);
+        switch (text) {
+            case "true":
+            case "1":
+                return true;
+            case "false":
+            case "0":
+                return false;
+            default:
+                throw new NumberFormatException(text);
+        }
 	}
 
 	public static java.lang.Boolean[] convert(boolean[] booleans){
