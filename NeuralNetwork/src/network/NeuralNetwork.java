@@ -189,7 +189,7 @@ public class NeuralNetwork implements Serializable {
             List<Neuron> hiddenLayerNeurons = new ArrayList<>();
             for (int j = 0; j < hiddenNeuronLayers[i]; j++) {
                 Neuron neuron = new Neuron(j);
-                neuron.setActivationFunction(i % 2 == 0 ? ActivationFunction::sigmoid : ActivationFunction::ReLu);
+                neuron.setActivationFunction(ActivationFunction::tanh);
                 hiddenLayerNeurons.add(j, neuron);
             }
             hiddenLayers.add(i, new NeuralNetLayer(i + 1, hiddenLayerNeurons));
@@ -198,7 +198,7 @@ public class NeuralNetwork implements Serializable {
         //region output neurons
         for (int i = 0; i < outputNeuronCount; i++) {
             Neuron neuron = new Neuron(i);
-            neuron.setActivationFunction(ActivationFunction::sigmoid);
+            neuron.setActivationFunction(ActivationFunction::ReLu);
             outputNeurons.add(neuron);
         }
         //endregion

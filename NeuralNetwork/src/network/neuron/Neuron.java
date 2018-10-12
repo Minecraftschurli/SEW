@@ -125,4 +125,5 @@ public class Neuron implements Serializable {
     public Connection getConnection(int i) {
         return inputConnections.get(i);
     }
+
 }

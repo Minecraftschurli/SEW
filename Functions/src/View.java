@@ -11,6 +11,7 @@ public class View extends JFrame implements ChangeListener {
 
     public View(final String str) {
         // a*((x+c)^n)+b
+        // a*(x^2)+b*x+c
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.m = new Model(str, 5);
         JPanel c = new JPanel();

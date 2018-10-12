@@ -3,6 +3,7 @@ package network;
 import network.neuron.Connection;
 import network.neuron.Neuron;
 import network.structure.NeuralNetLayer;
+import testing.Test;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,11 +19,11 @@ public class Visualisation {
 
     private static final int[] size = new int[1];
     private static final int[] space = new int[1];
-    private static String PATH = "C:\\Users\\georg\\Documents\\Schule\\SEW\\NeuralNetwork\\resources\\";
+    private static final String PATH = Test.SAVE_PATH;
     private static int offsetX = 10;
     private static int offsetY = 20;
     private static int width = 50;
-    private static int height = width;
+    private static int height = 50;
     private static int length = 180;
     private static int max = 0;
 
@@ -32,7 +34,7 @@ public class Visualisation {
             NeuralNetLayer l = nn.getLayer(i);
             if (l.neurons.size() > max) max = l.neurons.size();
         }
-        size[0] = offsetY + (max * (height + offsetY));
+        size[0] = offsetY + ((max + 1) * (height + offsetY));
         JPanel canvas = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -50,7 +52,7 @@ public class Visualisation {
         frame.add(canvas);
         frame.setVisible(true);
 
-        BufferedImage image = new BufferedImage(nn.getLayerCount() * (width + length), size[0] + 40, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(nn.getLayerCount() * (width + length), size[0] + 50, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
         g2d.setColor(new Color(0xFFFFFF));
         g2d.fillRect(0, 0, image.getWidth(), image.getHeight());
@@ -69,7 +71,7 @@ public class Visualisation {
 
         for (int i = 0; i < nn.getLayerCount(); i++) {
             NeuralNetLayer l = nn.getLayer(i);
-            space[0] = -((height * l.neurons.size() - size[0]) / (l.neurons.size() + 1));
+            space[0] = -((height * l.neurons.size() - (size[0] - (height + offsetY))) / (l.neurons.size() + 1));
             for (int j = 0; j < l.neurons.size(); j++) {
                 int x = offsetX + (i * (width + length));
                 int y = space[0] + ((space[0] + height) * j) + offsetY;
@@ -81,19 +83,38 @@ public class Visualisation {
                 map.put(l.neurons.get(j), p);
             }
         }
+        Point p = new Point(offsetX, (size[0] - height));
+        g2d.drawOval(p.x, p.y, width, height);
+        p.translate(width / 2, height / 2);
+        g2d.drawString("bias", p.x - (width / 2) + 7, p.y + 7);
+        map.put(nn.biasNeuron, p);
+        g2d.drawLine(p.x + (width / 2), p.y, p.x + ((nn.getLayerCount() - 2) * (width + length)) + (width / 2), p.y);
         for (int i = 1; i < nn.getLayerCount(); i++) {
             NeuralNetLayer layer = nn.getLayer(i);
             for (int j = 0; j < layer.neurons.size(); j++) {
                 Neuron neuron = layer.neurons.get(j);
                 for (int k = 0; k < neuron.inputConnections.size(); k++) {
                     Connection connection = neuron.inputConnections.get(k);
-                    if (connection.getFromNeuron() == nn.biasNeuron) continue;
+                    if (connection.getFromNeuron() == nn.biasNeuron) {
+                        Point from = map.get(nn.biasNeuron), to = map.get(connection.getToNeuron()), fromF = new Point(from);
+                        fromF.translate((i - 1) * (width + length), 0);
+                        drawConnection(g2d, connection, fromF, to);
+                        continue;
+                    }
                     Point from = map.get(connection.getFromNeuron()), to = map.get(connection.getToNeuron());
-                    g2d.setColor(new Color(connection.getWeight() > 0.0 ? 0xFF0000 : connection.getWeight() < 0.0 ? 0x0000FF : 0x000000));
-                    if (connection.getWeight() != 0.0)
-                        g2d.drawLine(from.x + (width / 2), from.y, to.x - (width / 2), to.y);
+                    drawConnection(g2d, connection, from, to);
                 }
             }
+        }
+    }
+
+    private static void drawConnection(Graphics2D g2d, Connection connection, Point from, Point to) {
+        NumberFormat format = NumberFormat.getNumberInstance();
+        format.setMaximumFractionDigits(2);
+        g2d.setColor(new Color(connection.getWeight() > 0.0 ? 0xFF0000 : connection.getWeight() < 0.0 ? 0x0000FF : 0x000000));
+        if (connection.getWeight() != 0.0) {
+            g2d.drawLine(from.x + (width / 2), from.y, to.x - (width / 2), to.y);
+            g2d.drawString(format.format(connection.getWeight()), (from.x + (width / 2)) + ((to.x - from.x) / 5), from.y + ((to.y - from.y) / 5));
         }
     }
 }
