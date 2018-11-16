@@ -121,6 +121,7 @@ public class MasterMind {
                     createBotGame((Integer) startArgs[0], (Integer) startArgs[1], (Integer) startArgs[2]);
                     break;
                 case "debug":
+                    if (!startArgs[4].equals("1234")) return;
                     createDebugGame((Integer) startArgs[0], (Integer) startArgs[1], (Integer) startArgs[2], null, (Boolean) startArgs[3]);
                     break;
             }
