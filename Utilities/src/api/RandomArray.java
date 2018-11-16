@@ -1,55 +1,85 @@
 package api;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class RandomArray {
 
-	private int[] valueInt;
-	private long[] valueLong;
-    private short[] valueShort;
-	private double[] valueDouble;
-	private boolean[] valueBoolean;
-	private Random rand;
+    public static class Generator {
+        private final boolean preventDoubles;
 
-    public RandomArray() {
-		this.rand = new Random();
-	}
-	
-	
-	
-	public int[] getIntArray(int arrayLength){
-		this.valueInt = new int[arrayLength];
-		int[] hInt = rand.ints().toArray();
-		for (int i = 0; i < this.valueInt.length; i++) {
-			this.valueInt[i] = hInt[i];
-		}
-		return valueInt;
-	}
-	
-	public long[] getLongArray(int arrayLength){
-		this.valueLong = new long[arrayLength];
-		long[] hLong = this.rand.longs().toArray();
-		for (int i = 0; i < this.valueLong.length; i++) {
-			this.valueLong[i] = hLong[i];
-		}
-		return valueLong;
-	}
-	
-	public double[] getDoubleArray(int arrayLength){
-		this.valueDouble = new double[arrayLength];
-		double[] hDouble = this.rand.doubles().toArray();
-		for (int i = 0; i < this.valueDouble.length; i++) {
-			this.valueDouble[i] = hDouble[i];
-		}
-		return valueDouble;
-	}
-	
-	public boolean[] getBooleanArray(int length){
-		this.valueBoolean = new boolean[length];
-		for (int i = 0; i < this.valueBoolean.length; i++) {
-			this.valueBoolean[i] = this.rand.nextBoolean();
-		}
-		return valueBoolean;
-	}
-	
+        public Generator(boolean preventDoubles) {
+            this.preventDoubles = preventDoubles;
+        }
+
+        public int[] getIntArray(int arrayLength) {
+            if (!preventDoubles)
+                return new Random().ints(arrayLength).toArray();
+            else {
+                Random r = new Random();
+                List<Integer> out = new ArrayList<>();
+                for (int i = 0; i < arrayLength; i++) {
+                    int tmp = r.nextInt();
+                    if (out.contains(tmp)) {
+                        i--;
+                        continue;
+                    }
+                    out.add(tmp);
+                }
+                int[] outA = new int[arrayLength];
+                for (int i = 0; i < out.size(); i++) {
+                    outA[i] = out.get(i);
+                }
+                return outA;
+            }
+        }
+
+        public int[] getIntArray(int arrayLength, int min, int max) {
+            if (!preventDoubles)
+                return new Random().ints(arrayLength, min, max).toArray();
+            else {
+                Random r = new Random();
+                List<Integer> out = new ArrayList<>();
+                for (int i = 0; i < arrayLength; i++) {
+                    int tmp = r.nextInt(max - min) + min;
+                    if (out.contains(tmp)) {
+                        i--;
+                        continue;
+                    }
+                    out.add(tmp);
+                }
+                int[] outA = new int[arrayLength];
+                for (int i = 0; i < out.size(); i++) {
+                    outA[i] = out.get(i);
+                }
+                return outA;
+            }
+        }
+
+        public long[] getLongArray(int arrayLength) {
+            return new Random().longs(arrayLength).toArray();
+        }
+
+        public long[] getLongArray(int arrayLength, long min, long max) {
+            return new Random().longs(arrayLength, min, max).toArray();
+        }
+
+        public double[] getDoubleArray(int arrayLength) {
+            return new Random().doubles(arrayLength).toArray();
+        }
+
+        public double[] getDoubleArray(int arrayLength, double min, double max) {
+            return new Random().doubles(arrayLength, min, max).toArray();
+        }
+
+        public boolean[] getBooleanArray(int arrayLength) {
+            Random rand = new Random();
+            boolean[] valueBoolean = new boolean[arrayLength];
+            for (int i = 0; i < valueBoolean.length; i++) {
+                valueBoolean[i] = rand.nextBoolean();
+            }
+            return valueBoolean;
+        }
+    }
 }
